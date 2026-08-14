@@ -287,7 +287,7 @@ cannot express; it is enforced in the application layer.
 
 ---
 
-## `scheduling/tests/` — 20 เทสต์ที่คุ้มค่าที่สุดในโปรเจกต์
+## `scheduling/tests/` — 38 เทสต์ที่คุ้มค่าที่สุดในโปรเจกต์
 
 ### `factories.py`
 **TH:** `ClinicTestDataMixin` สร้างสาขา/แพทย์/บริการ/คนไข้ให้ TestCase ใช้ซ้ำ + `next_monday()`
@@ -298,7 +298,7 @@ cannot express; it is enforced in the application layer.
 doesn't interfere) and `bangkok_datetime()`. **These are test fixtures, not mock data** — confined to
 `tests/`, as spec §7 requires.
 
-### `test_slot_availability.py` (17 เทสต์)
+### `test_slot_availability.py` (18 เทสต์)
 **TH:** ครอบคลุมทั้งสองโหมด: slot อยู่ในตารางแพทย์, เว้นระยะตาม `slot_interval_minutes`,
 วันที่ไม่มีตาราง = ไม่มี slot, เวลาทำการของสาขาตัดตารางแพทย์, TimeBlock ตัด slot ที่ทับ,
 บล็อกแบบ recurring มีผลกับสัปดาห์ถัดไป, คิวที่จองแล้วหายไปจากรายการ,

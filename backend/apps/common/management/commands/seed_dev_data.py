@@ -27,10 +27,13 @@ from apps.common.roles import UserRole
 from apps.doctors.models import Doctor, DoctorSchedule, TimeBlock, Weekday
 from apps.patients.services import PatientRegistrationService
 from apps.scheduling.models import Appointment
-from apps.scheduling.services import AppointmentBookingService
+from apps.scheduling.services import AppointmentBookingService, SlotAvailabilityService
 from apps.services.models import ServiceType
 
 DEFAULT_PASSWORD = "ClinicDev!2026"
+
+#: จำนวนวันข้างหน้าที่ยอมไล่หา "วันที่แพทย์ออกตรวจ" เพื่อสร้างคิวตัวอย่าง
+SAMPLE_SEARCH_DAYS = 7
 
 CLINIC_SEED = [
     {
@@ -262,20 +265,29 @@ class Command(BaseCommand):
     ) -> None:
         """
         จองคิวตัวอย่างผ่าน service จริง เพื่อให้ข้อมูลที่ได้ผ่านกฎกันคิวชนเหมือนของจริง
+
+        ไล่หา "วันที่แพทย์ออกตรวจจริง" ก่อนเสมอ เพราะแพทย์แต่ละคนลงตรวจคนละวัน
+        ถ้ายึดวันพรุ่งนี้กับแพทย์คนแรกตายตัว พอ seed ตรงกับวันหยุดของแพทย์คนนั้น
+        จะไม่ได้คิวตัวอย่างเลยและหน้าจอคิวจะว่างเปล่าโดยไม่มีสาเหตุที่ชัดเจน
         """
         clinic = clinics["BKK"]
-        doctor = next((d for d in doctors if d.clinic_id == clinic.pk), None)
-        service = next(s for s in services if s.requires_doctor)
-        if doctor is None or not patients:
+        clinic_doctors = [doctor for doctor in doctors if doctor.clinic_id == clinic.pk]
+        service = next(service for service in services if service.requires_doctor)
+        if not clinic_doctors or not patients:
             return
 
-        booking = AppointmentBookingService(clinic=clinic)
-        availability_date = date.today() + timedelta(days=1)
-        from apps.scheduling.services import SlotAvailabilityService
+        workday = self._find_workday_with_slots(clinic, service, clinic_doctors)
+        if workday is None:
+            self.stdout.write(
+                f"ไม่พบวันที่แพทย์ออกตรวจในช่วง {SAMPLE_SEARCH_DAYS} วันข้างหน้า จึงข้ามการสร้างคิวตัวอย่าง"
+            )
+            return
 
-        slots = SlotAvailabilityService(clinic, service, doctor).available_slots(availability_date)
+        doctor, target_date, slots = workday
+        booking = AppointmentBookingService(clinic=clinic)
         created = 0
 
+        # เว้นทีละ 4 slot เพื่อให้คิวตัวอย่างกระจายทั้งวัน ไม่กองติดกันตอนเช้า
         for patient, slot in zip(patients, slots[::4]):
             if Appointment.objects.filter(patient=patient, scheduled_start=slot.start).exists():
                 continue
@@ -287,4 +299,19 @@ class Command(BaseCommand):
             )
             created += 1
 
-        self.stdout.write(f"สร้างคิวตัวอย่างของวันพรุ่งนี้ {created} คิว")
+        self.stdout.write(
+            f"สร้างคิวตัวอย่างวันที่ {target_date} ของ {doctor.display_name} จำนวน {created} คิว"
+        )
+
+    @staticmethod
+    def _find_workday_with_slots(
+        clinic: Clinic, service: ServiceType, doctors: list[Doctor]
+    ) -> tuple[Doctor, date, list] | None:
+        """หาคู่ (แพทย์, วันที่) ที่มีเวลาว่างพอสร้างคิวตัวอย่างได้ — คืน None ถ้าไม่เจอ"""
+        for day_offset in range(1, SAMPLE_SEARCH_DAYS + 1):
+            target_date = date.today() + timedelta(days=day_offset)
+            for doctor in doctors:
+                slots = SlotAvailabilityService(clinic, service, doctor).available_slots(target_date)
+                if slots:
+                    return doctor, target_date, slots
+        return None
