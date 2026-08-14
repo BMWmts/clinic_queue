@@ -15,6 +15,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.common.branch import resolve_request_clinic
 from apps.common.permissions import CanOperateQueue
 from apps.doctors.views import parse_date_param
 from apps.queue.permissions import CanUpdateAppointmentStatus
@@ -26,7 +27,6 @@ from apps.scheduling.serializers import (
     AppointmentSerializer,
     AppointmentStatusUpdateSerializer,
 )
-from apps.scheduling.views import resolve_request_clinic
 
 
 class QueueServiceMixin:

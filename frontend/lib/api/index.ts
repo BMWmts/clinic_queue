@@ -205,6 +205,8 @@ export class PatientApiClient extends BaseApiClient {
     phone: string;
     date_of_birth?: string | null;
     gender?: string;
+    /** สาขาที่คนไข้ลงทะเบียน — Super Admin ต้องระบุ ผู้ใช้ทั่วไป backend เติมให้เอง */
+    clinic_id?: number;
   }): Promise<Patient> {
     return this.http.post<Patient>("/patients", payload);
   }

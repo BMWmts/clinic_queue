@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.clinics.models import Clinic
-from apps.common.exceptions import BranchAccessDeniedError
+from apps.common.branch import resolve_request_clinic
 from apps.common.mixins import BranchScopedQuerySetMixin
 from apps.common.permissions import CanOperateQueue
 from apps.common.timezone_utils import to_local
@@ -34,26 +34,6 @@ from apps.scheduling.serializers import (
 )
 from apps.scheduling.services import AppointmentBookingService, SlotAvailabilityService
 from apps.services.models import ServiceType
-
-
-def resolve_request_clinic(request: Request) -> Clinic:
-    """
-    หาสาขาที่ request นี้ทำงานด้วย
-
-    ผู้ใช้ทั่วไป = สาขาของตัวเองเสมอ
-    Super Admin = ต้องระบุ ?clinic_id= เพราะไม่ได้สังกัดสาขาใดสาขาหนึ่ง
-    """
-    user = request.user
-
-    if user.can_access_all_branches:
-        clinic_id = request.query_params.get("clinic_id") or request.data.get("clinic_id")
-        if not clinic_id:
-            raise ValidationError({"clinic_id": "ผู้ดูแลระบบสูงสุดต้องระบุสาขาที่ต้องการทำงานด้วย"})
-        return get_object_or_404(Clinic, pk=clinic_id)
-
-    if user.clinic_id is None:
-        raise BranchAccessDeniedError("บัญชีของคุณยังไม่ได้ผูกกับสาขาใด")
-    return user.clinic
 
 
 class AppointmentViewSet(BranchScopedQuerySetMixin, viewsets.ModelViewSet):

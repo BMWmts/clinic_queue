@@ -15,6 +15,8 @@ import type { Appointment, AvailableSlot, Doctor, Patient, ServiceType } from "@
 
 interface BookingDialogProps {
   doctors: Doctor[];
+  /** สาขาที่กำลังทำงานด้วย — จำเป็นสำหรับ Super Admin ที่ไม่ได้สังกัดสาขาใด */
+  clinicId: number | null;
   initialPatient?: Patient | null;
   initialDate?: string;
   initialDoctorId?: number | null;
@@ -24,6 +26,7 @@ interface BookingDialogProps {
 
 export function BookingDialog({
   doctors,
+  clinicId,
   initialPatient = null,
   initialDate,
   initialDoctorId = null,
@@ -68,6 +71,7 @@ export function BookingDialog({
         service_id: serviceId,
         date: targetDate,
         doctor_id: requiresDoctor ? doctorId ?? undefined : undefined,
+        clinic_id: clinicId ?? undefined,
       });
       setSlots(response.slots);
     } catch (error) {
@@ -76,7 +80,7 @@ export function BookingDialog({
     } finally {
       setIsLoadingSlots(false);
     }
-  }, [serviceId, doctorId, targetDate, requiresDoctor]);
+  }, [serviceId, doctorId, targetDate, requiresDoctor, clinicId]);
 
   useEffect(() => {
     void loadSlots();
@@ -106,6 +110,7 @@ export function BookingDialog({
         doctor: requiresDoctor ? doctorId : null,
         scheduled_start: slot.start,
         note: note.trim(),
+        clinic_id: clinicId ?? undefined,
       });
       onBooked(appointment);
     } catch (error) {

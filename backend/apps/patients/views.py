@@ -14,7 +14,7 @@ from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.common.exceptions import BranchAccessDeniedError
+from apps.common.branch import resolve_request_clinic
 from apps.common.permissions import CanOperateQueue
 from apps.patients.models import Patient, PatientNote
 from apps.patients.serializers import PatientNoteSerializer, PatientSerializer
@@ -42,11 +42,14 @@ class PatientViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer) -> None:
-        """สร้างคนไข้ใหม่ผ่าน service เพื่อให้ได้รหัสคนไข้ที่ไม่ซ้ำ"""
+        """
+        สร้างคนไข้ใหม่ผ่าน service เพื่อให้ได้รหัสคนไข้ที่ไม่ซ้ำ
+
+        สาขาที่ใช้เป็น `home_clinic` มาจากตัวช่วยกลางตัวเดียวกับที่การจองคิวใช้
+        (ผู้ใช้ทั่วไป = สาขาตัวเอง, Super Admin = สาขาที่ระบุมาใน clinic_id)
+        """
         user = self.request.user
-        clinic = user.clinic
-        if clinic is None:
-            raise BranchAccessDeniedError("บัญชีของคุณยังไม่ได้ผูกกับสาขาใด จึงลงทะเบียนคนไข้ไม่ได้")
+        clinic = resolve_request_clinic(self.request)
 
         registration = PatientRegistrationService(clinic=clinic, created_by=user)
         patient = registration.create_patient(**serializer.validated_data)

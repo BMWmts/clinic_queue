@@ -10,10 +10,12 @@ import { useState } from "react";
 import Link from "next/link";
 
 import { ApiError, patientApi } from "@/lib/api";
+import { useSession } from "@/lib/hooks/useSession";
 import { Alert, Button, Card, EmptyState, Field, Select, TextInput } from "@/components/ui";
 import type { Patient } from "@/types/api";
 
 export function PatientDirectory() {
+  const { activeClinicId, needsClinicSelection } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState<Patient[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -68,6 +70,8 @@ export function PatientDirectory() {
 
       {isCreateOpen && (
         <NewPatientForm
+          clinicId={activeClinicId}
+          needsClinicSelection={needsClinicSelection}
           onCreated={(patient) => {
             setResults([patient, ...results]);
             setHasSearched(true);
@@ -110,7 +114,15 @@ export function PatientDirectory() {
   );
 }
 
-function NewPatientForm({ onCreated }: { onCreated: (patient: Patient) => void }) {
+function NewPatientForm({
+  clinicId,
+  needsClinicSelection,
+  onCreated,
+}: {
+  clinicId: number | null;
+  needsClinicSelection: boolean;
+  onCreated: (patient: Patient) => void;
+}) {
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -133,6 +145,7 @@ function NewPatientForm({ onCreated }: { onCreated: (patient: Patient) => void }
         phone: form.phone.trim(),
         date_of_birth: form.date_of_birth || null,
         gender: form.gender,
+        clinic_id: clinicId ?? undefined,
       });
       onCreated(patient);
     } catch (error) {
@@ -146,6 +159,11 @@ function NewPatientForm({ onCreated }: { onCreated: (patient: Patient) => void }
     <Card title="ลงทะเบียนคนไข้ใหม่" description="ระบบจะสร้างรหัสคนไข้ให้อัตโนมัติ">
       <form onSubmit={handleSubmit} className="space-y-3">
         {errorMessage && <Alert>{errorMessage}</Alert>}
+        {needsClinicSelection && (
+          <Alert tone="info">
+            กรุณาเลือกสาขาจากแถบด้านบนขวาก่อน คนไข้ใหม่จะถูกลงทะเบียนไว้ที่สาขานั้น
+          </Alert>
+        )}
 
         <div className="grid gap-3 sm:grid-cols-2">
           <Field label="ชื่อ">
@@ -190,7 +208,7 @@ function NewPatientForm({ onCreated }: { onCreated: (patient: Patient) => void }
         </div>
 
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || needsClinicSelection}>
             {isSubmitting ? "กำลังบันทึก..." : "บันทึกคนไข้"}
           </Button>
         </div>

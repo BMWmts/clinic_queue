@@ -15,6 +15,8 @@ import type { Appointment, AvailableSlot, Doctor } from "@/types/api";
 interface RescheduleDialogProps {
   appointment: Appointment;
   doctors: Doctor[];
+  /** สาขาที่กำลังทำงานด้วย — จำเป็นสำหรับ Super Admin ที่ไม่ได้สังกัดสาขาใด */
+  clinicId: number | null;
   onClose: () => void;
   onRescheduled: (appointment: Appointment) => void;
 }
@@ -22,6 +24,7 @@ interface RescheduleDialogProps {
 export function RescheduleDialog({
   appointment,
   doctors,
+  clinicId,
   onClose,
   onRescheduled,
 }: RescheduleDialogProps) {
@@ -40,6 +43,7 @@ export function RescheduleDialog({
         service_id: appointment.service_type,
         date: targetDate,
         doctor_id: doctorId ?? undefined,
+        clinic_id: clinicId ?? undefined,
       });
       setSlots(response.slots);
     } catch (error) {
@@ -48,7 +52,7 @@ export function RescheduleDialog({
     } finally {
       setIsLoadingSlots(false);
     }
-  }, [appointment.service_type, targetDate, doctorId]);
+  }, [appointment.service_type, targetDate, doctorId, clinicId]);
 
   useEffect(() => {
     void loadSlots();

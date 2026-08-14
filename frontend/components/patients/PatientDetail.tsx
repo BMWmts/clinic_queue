@@ -18,9 +18,11 @@ import {
   TextInput,
 } from "@/components/ui";
 import { BookingDialog } from "@/components/booking/BookingDialog";
+import { useSession } from "@/lib/hooks/useSession";
 import type { Appointment, Doctor, Patient, PatientNote } from "@/types/api";
 
 export function PatientDetail({ patientId }: { patientId: number }) {
+  const { activeClinicId } = useSession();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [notes, setNotes] = useState<PatientNote[]>([]);
@@ -121,6 +123,7 @@ export function PatientDetail({ patientId }: { patientId: number }) {
       {isBookingOpen && (
         <BookingDialog
           doctors={doctors}
+          clinicId={activeClinicId}
           initialPatient={patient}
           onClose={() => setIsBookingOpen(false)}
           onBooked={() => {

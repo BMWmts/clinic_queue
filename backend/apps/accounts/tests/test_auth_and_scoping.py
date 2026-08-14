@@ -172,3 +172,57 @@ class BranchScopingApiTests(ClinicTestDataMixin, APITestCase):
         )
 
         self.assertEqual(response.status_code, 403)
+
+
+class SuperAdminBranchSelectionTests(ClinicTestDataMixin, APITestCase):
+    """
+    Super Admin ไม่ได้สังกัดสาขา จึงต้องเลือกสาขาที่จะทำงานด้วยทุกครั้ง
+
+    endpoint ที่ "สร้าง/อ่านข้อมูลของสาขาใดสาขาหนึ่ง" ต้องรับ clinic_id ได้
+    และต้องบอกให้ชัดเมื่อไม่ได้ระบุมา (ไม่ใช่เงียบ ๆ ไปหยิบสาขาแรกมาใช้)
+    """
+
+    def setUp(self) -> None:
+        self.bangkok_clinic = self.create_clinic(code="BKK", name="สาขากรุงเทพ")
+        self.chiangmai_clinic = self.create_clinic(code="CNX", name="สาขาเชียงใหม่")
+        self.super_admin = self.create_user(
+            clinic=None, email="root@clinic.test", role=UserRole.SUPER_ADMIN
+        )
+        self.client.force_authenticate(self.super_admin)
+
+    def test_queue_requires_clinic_id(self) -> None:
+        response = self.client.get(reverse("queue-today"))
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("clinic_id", response.data)
+
+    def test_queue_returns_selected_branch(self) -> None:
+        response = self.client.get(reverse("queue-today"), {"clinic_id": self.chiangmai_clinic.pk})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["clinic_id"], self.chiangmai_clinic.pk)
+
+    def test_creating_patient_requires_clinic_id(self) -> None:
+        response = self.client.post(
+            reverse("patient-list"),
+            {"first_name": "สมหญิง", "last_name": "ใจดี", "phone": "0812345678"},
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("clinic_id", response.data)
+
+    def test_creating_patient_uses_the_selected_branch(self) -> None:
+        """คนไข้ที่ Super Admin ลงทะเบียน ต้องสังกัดสาขาที่เลือก ไม่ใช่สาขาแรกในระบบ"""
+        response = self.client.post(
+            reverse("patient-list"),
+            {
+                "first_name": "สมหญิง",
+                "last_name": "ใจดี",
+                "phone": "0812345678",
+                "clinic_id": self.chiangmai_clinic.pk,
+            },
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data["home_clinic"], self.chiangmai_clinic.pk)
+        self.assertTrue(response.data["patient_code"].startswith("CNX-"))

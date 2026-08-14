@@ -34,7 +34,7 @@ import { WalkInDialog } from "@/components/queue/WalkInDialog";
 import type { Appointment, AppointmentStatus, Doctor } from "@/types/api";
 
 export function QueueBoard() {
-  const { canOperateQueue } = useSession();
+  const { canOperateQueue, activeClinicId, needsClinicSelection } = useSession();
   const [selectedDate, setSelectedDate] = useState(todayIsoDate());
   const [selectedDoctorId, setSelectedDoctorId] = useState<number | undefined>(undefined);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -43,14 +43,26 @@ export function QueueBoard() {
   const [appointmentToReschedule, setAppointmentToReschedule] = useState<Appointment | null>(null);
 
   const { appointments, summary, isLoading, errorMessage, isLive, refresh, applyUpdatedAppointment } =
-    useQueueBoard({ date: selectedDate, doctorId: selectedDoctorId });
+    useQueueBoard({
+      date: selectedDate,
+      doctorId: selectedDoctorId,
+      clinicId: activeClinicId ?? undefined,
+      enabled: !needsClinicSelection,
+    });
 
   useEffect(() => {
+    if (needsClinicSelection) {
+      setDoctors([]);
+      return;
+    }
+
+    // โหลดใหม่ทุกครั้งที่เปลี่ยนสาขา ไม่งั้นจะเห็นรายชื่อแพทย์ของสาขาก่อนหน้าค้างอยู่
     doctorApi
-      .list({ is_active: true })
+      .list({ is_active: true, clinic_id: activeClinicId ?? undefined })
       .then((page) => setDoctors(page.results))
       .catch(() => setDoctors([]));
-  }, []);
+    setSelectedDoctorId(undefined);
+  }, [activeClinicId, needsClinicSelection]);
 
   const isToday = selectedDate === todayIsoDate();
 
@@ -73,6 +85,15 @@ export function QueueBoard() {
       setActionError(error instanceof ApiError ? error.message : "เปลี่ยนสถานะไม่สำเร็จ");
     }
   };
+
+  // Super Admin ไม่ได้สังกัดสาขา จึงต้องเลือกก่อนว่าจะดูคิวของสาขาไหน
+  if (needsClinicSelection) {
+    return (
+      <Alert tone="info">
+        กรุณาเลือกสาขาที่ต้องการดูแลจากแถบด้านบนขวา ระบบจึงจะแสดงคิวของสาขานั้นให้
+      </Alert>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -181,6 +202,7 @@ export function QueueBoard() {
       {walkInOpen && (
         <WalkInDialog
           doctors={doctors}
+          clinicId={activeClinicId}
           onClose={() => setWalkInOpen(false)}
           onCreated={(appointment) => {
             applyUpdatedAppointment(appointment);
@@ -194,6 +216,7 @@ export function QueueBoard() {
         <RescheduleDialog
           appointment={appointmentToReschedule}
           doctors={doctors}
+          clinicId={activeClinicId}
           onClose={() => setAppointmentToReschedule(null)}
           onRescheduled={(appointment) => {
             applyUpdatedAppointment(appointment);

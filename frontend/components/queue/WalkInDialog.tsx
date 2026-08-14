@@ -16,11 +16,13 @@ import type { Appointment, Doctor, Patient, ServiceType } from "@/types/api";
 
 interface WalkInDialogProps {
   doctors: Doctor[];
+  /** สาขาที่กำลังทำงานด้วย — จำเป็นสำหรับ Super Admin ที่ไม่ได้สังกัดสาขาใด */
+  clinicId: number | null;
   onClose: () => void;
   onCreated: (appointment: Appointment) => void;
 }
 
-export function WalkInDialog({ doctors, onClose, onCreated }: WalkInDialogProps) {
+export function WalkInDialog({ doctors, clinicId, onClose, onCreated }: WalkInDialogProps) {
   const [services, setServices] = useState<ServiceType[]>([]);
   const [serviceId, setServiceId] = useState<number | null>(null);
   const [doctorId, setDoctorId] = useState<number | null>(null);
@@ -66,6 +68,7 @@ export function WalkInDialog({ doctors, onClose, onCreated }: WalkInDialogProps)
     try {
       const appointment = await queueApi.walkIn({
         service_type: serviceId,
+        clinic_id: clinicId ?? undefined,
         doctor: requiresDoctor ? doctorId : null,
         patient: selectedPatient?.id,
         new_patient: selectedPatient

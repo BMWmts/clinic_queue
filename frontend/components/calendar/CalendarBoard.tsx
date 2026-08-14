@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { ApiError, doctorApi, schedulingApi } from "@/lib/api";
 import { formatTime, isoDateOf, shiftIsoDate, todayIsoDate } from "@/lib/format";
+import { useSession } from "@/lib/hooks/useSession";
 import { Alert, Button, Card, EmptyState, LoadingRow, TextInput } from "@/components/ui";
 import { BookingDialog } from "@/components/booking/BookingDialog";
 import type { Appointment, Doctor, DoctorAvailability } from "@/types/api";
@@ -53,6 +54,7 @@ function buildTimeRows(availabilities: DoctorAvailability[]): TimeRow[] {
 }
 
 export function CalendarBoard() {
+  const { activeClinicId, needsClinicSelection } = useSession();
   const [targetDate, setTargetDate] = useState(todayIsoDate());
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [availabilities, setAvailabilities] = useState<DoctorAvailability[]>([]);
@@ -63,10 +65,18 @@ export function CalendarBoard() {
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   const loadCalendar = useCallback(async () => {
+    if (needsClinicSelection) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const doctorPage = await doctorApi.list({ is_active: true });
+      const doctorPage = await doctorApi.list({
+        is_active: true,
+        clinic_id: activeClinicId ?? undefined,
+      });
       const activeDoctors = doctorPage.results;
 
       const [availabilityList, appointmentPage] = await Promise.all([
@@ -75,6 +85,7 @@ export function CalendarBoard() {
           date_from: targetDate,
           date_to: targetDate,
           page_size: 200,
+          clinic_id: activeClinicId ?? undefined,
         }),
       ]);
 
@@ -86,7 +97,7 @@ export function CalendarBoard() {
     } finally {
       setIsLoading(false);
     }
-  }, [targetDate]);
+  }, [targetDate, activeClinicId, needsClinicSelection]);
 
   useEffect(() => {
     void loadCalendar();
@@ -126,6 +137,14 @@ export function CalendarBoard() {
     );
     return { kind: isWorking ? ("free" as const) : ("off" as const) };
   };
+
+  if (needsClinicSelection) {
+    return (
+      <Alert tone="info">
+        กรุณาเลือกสาขาที่ต้องการดูแลจากแถบด้านบนขวา ระบบจึงจะแสดงตารางแพทย์ของสาขานั้นให้
+      </Alert>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -226,6 +245,7 @@ export function CalendarBoard() {
       {isBookingOpen && (
         <BookingDialog
           doctors={doctors}
+          clinicId={activeClinicId}
           initialDate={targetDate}
           initialDoctorId={bookingDoctorId}
           onClose={() => setIsBookingOpen(false)}

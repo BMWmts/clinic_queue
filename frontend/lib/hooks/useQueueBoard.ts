@@ -20,6 +20,13 @@ interface UseQueueBoardOptions {
   date: string;
   doctorId?: number;
   clinicId?: number;
+  /**
+   * ปิดการเรียก API ชั่วคราว (ค่าเริ่มต้นคือเปิด)
+   *
+   * ใช้กับกรณี Super Admin ที่ยังไม่ได้เลือกสาขา — ถ้ายิงไปทั้งที่ยังไม่มี clinic_id
+   * backend จะตอบ 400 และหน้าจอจะขึ้น error แดงทั้งที่ผู้ใช้แค่ยังไม่ได้เลือก
+   */
+  enabled?: boolean;
 }
 
 interface UseQueueBoardResult {
@@ -33,7 +40,12 @@ interface UseQueueBoardResult {
   applyUpdatedAppointment: (appointment: Appointment) => void;
 }
 
-export function useQueueBoard({ date, doctorId, clinicId }: UseQueueBoardOptions): UseQueueBoardResult {
+export function useQueueBoard({
+  date,
+  doctorId,
+  clinicId,
+  enabled = true,
+}: UseQueueBoardOptions): UseQueueBoardResult {
   const [queueData, setQueueData] = useState<QueueTodayResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,6 +53,9 @@ export function useQueueBoard({ date, doctorId, clinicId }: UseQueueBoardOptions
   const socketRef = useRef<WebSocket | null>(null);
 
   const refresh = useCallback(async () => {
+    if (!enabled) {
+      return;
+    }
     try {
       const data = await queueApi.today({ date, doctor_id: doctorId, clinic_id: clinicId });
       setQueueData(data);
@@ -50,10 +65,17 @@ export function useQueueBoard({ date, doctorId, clinicId }: UseQueueBoardOptions
     } finally {
       setIsLoading(false);
     }
-  }, [date, doctorId, clinicId]);
+  }, [date, doctorId, clinicId, enabled]);
 
   // โหลดครั้งแรก + polling สำรอง (ทำงานเสมอ ต่อให้ WebSocket ใช้ได้ เพื่อกันข้อมูลค้าง)
   useEffect(() => {
+    if (!enabled) {
+      // ล้างข้อมูลของสาขาก่อนหน้าทิ้ง กันไม่ให้ค้างบนหน้าจอหลังเปลี่ยนสาขา
+      setQueueData(null);
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     void refresh();
 
@@ -62,7 +84,7 @@ export function useQueueBoard({ date, doctorId, clinicId }: UseQueueBoardOptions
     }, POLLING_INTERVAL_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [refresh]);
+  }, [refresh, enabled]);
 
   // เชื่อม WebSocket ของสาขาที่กำลังดูอยู่
   useEffect(() => {
