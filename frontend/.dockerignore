@@ -1,0 +1,14 @@
+# ห้าม copy dependency ที่ติดตั้งบนเครื่อง host เข้า image
+# (native binary ของ Windows เช่นตัว compile CSS ของ Tailwind ใช้บน Linux ไม่ได้)
+node_modules
+.next
+out
+
+# ค่า environment เฉพาะเครื่อง — ใน container ใช้ค่าจาก docker-compose แทน
+.env.local
+.env*.local
+
+npm-debug.log*
+.pnpm-debug.log*
+Dockerfile
+.dockerignore

@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.sqlite3
+.pytest_cache/
+
+# Environment / secrets
+.env
+.env.local
+*.pem
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+.pnpm-debug.log*
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Static / media ที่ generate เอง
+backend/staticfiles/
+backend/media/

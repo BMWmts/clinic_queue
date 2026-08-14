@@ -1,0 +1,17 @@
+# virtualenv ของเครื่อง host (binary คนละแพลตฟอร์มกับ image)
+.venv
+venv
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# ฐานข้อมูล dev และ secret — ต้องไม่ติดไปกับ image
+dev.sqlite3
+*.sqlite3
+.env
+
+staticfiles/
+media/
+Dockerfile
+.dockerignore
