@@ -81,16 +81,68 @@ export class DoctorApiClient extends BaseApiClient {
     return this.http.get<Paginated<Doctor>>("/doctors", params);
   }
 
+  retrieve(doctorId: number): Promise<Doctor> {
+    return this.http.get<Doctor>(`/doctors/${doctorId}`);
+  }
+
+  /** รับแพทย์ใหม่ — backend สร้างบัญชีล็อกอินและโปรไฟล์ให้พร้อมกันในคำสั่งเดียว */
+  create(payload: {
+    email: string;
+    full_name: string;
+    password: string;
+    display_name: string;
+    phone?: string;
+    specialties?: string;
+    color?: string;
+    clinic_id?: number;
+  }): Promise<Doctor> {
+    return this.http.post<Doctor>("/doctors", payload);
+  }
+
+  update(doctorId: number, payload: Partial<Doctor>): Promise<Doctor> {
+    return this.http.patch<Doctor>(`/doctors/${doctorId}`, payload);
+  }
+
   schedules(doctorId?: number): Promise<Paginated<DoctorSchedule>> {
     return this.http.get<Paginated<DoctorSchedule>>("/doctors/schedules", {
       doctor_id: doctorId,
+      page_size: 100,
     });
+  }
+
+  createSchedule(payload: {
+    doctor: number;
+    day_of_week: number;
+    start_time: string;
+    end_time: string;
+  }): Promise<DoctorSchedule> {
+    return this.http.post<DoctorSchedule>("/doctors/schedules", payload);
+  }
+
+  deleteSchedule(scheduleId: number): Promise<void> {
+    return this.http.delete<void>(`/doctors/schedules/${scheduleId}`);
   }
 
   timeBlocks(params: { doctor_id?: number; date_from?: string; date_to?: string } = {}): Promise<
     Paginated<TimeBlock>
   > {
     return this.http.get<Paginated<TimeBlock>>("/doctors/time-blocks", params);
+  }
+
+  createTimeBlock(payload: {
+    doctor: number;
+    start_datetime: string;
+    end_datetime: string;
+    reason: string;
+    note?: string;
+    is_recurring?: boolean;
+    recurrence?: "none" | "daily" | "weekly";
+  }): Promise<TimeBlock> {
+    return this.http.post<TimeBlock>("/doctors/time-blocks", payload);
+  }
+
+  deleteTimeBlock(timeBlockId: number): Promise<void> {
+    return this.http.delete<void>(`/doctors/time-blocks/${timeBlockId}`);
   }
 
   availability(doctorId: number, date: string): Promise<DoctorAvailability> {

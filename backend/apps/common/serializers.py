@@ -24,9 +24,15 @@ class ModelCleanValidationMixin:
 
         # ประกอบค่าที่ส่งเข้ามาลงบน instance ชั่วคราวเพื่อให้ clean() เห็นค่าล่าสุด
         # (กรณี update จะใช้ instance เดิมเป็นฐาน แล้วค่อยทับด้วยค่าที่แก้)
+        #
+        # ต้องเทียบกับรายชื่อฟิลด์ของ model ไม่ใช่ใช้ hasattr() เพราะการอ่าน
+        # ForeignKey ที่ยังไม่มีค่าบน instance ที่ยังไม่ถูกบันทึกจะโยน AttributeError
+        # ทำให้ hasattr() คืน False แล้วค่าที่ผู้ใช้ส่งมาถูกข้ามไปเงียบ ๆ
+        # (ผลคือกฎที่เขียนไว้ใน clean() เช่นการตรวจตารางออกตรวจทับกัน ไม่เคยทำงาน)
+        model_field_names = {field.name for field in model_class._meta.get_fields()}
         original_values = {}
         for field_name, value in attrs.items():
-            if hasattr(instance, field_name):
+            if field_name in model_field_names:
                 original_values[field_name] = getattr(instance, field_name, None)
                 setattr(instance, field_name, value)
 

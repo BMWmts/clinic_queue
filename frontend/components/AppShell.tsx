@@ -26,6 +26,7 @@ const NAVIGATION_ITEMS: NavigationItem[] = [
   { href: "/queue", label: "คิววันนี้", icon: "🩺" },
   { href: "/calendar", label: "ตารางแพทย์", icon: "🗓️" },
   { href: "/patients", label: "คนไข้", icon: "👥" },
+  { href: "/doctors", label: "จัดการแพทย์", icon: "🧑‍⚕️", requiresBranchManager: true },
   { href: "/reports", label: "รายงาน", icon: "📊", requiresBranchManager: true },
   { href: "/branches", label: "สาขา", icon: "🏥", requiresBranchManager: true },
 ];

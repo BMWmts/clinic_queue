@@ -1,18 +1,80 @@
 """
-Business logic ของฝั่งแพทย์ — คำนวณ "เวลาที่แพทย์ว่างตามตาราง" ของวันหนึ่ง
+Business logic ของฝั่งแพทย์
 
-แยกออกจาก view/serializer ตามแนวทางของโปรเจกต์ และ scheduling นำไปใช้ต่อ
-โดยหักคิวที่จองแล้วออกอีกชั้นหนึ่ง
+    DoctorRegistrationService — รับแพทย์ใหม่เข้าทำงาน (บัญชี + โปรไฟล์)
+    DoctorAvailabilityService — คำนวณ "เวลาที่แพทย์ว่างตามตาราง" ของวันหนึ่ง
+
+แยกออกจาก view/serializer ตามแนวทางของโปรเจกต์ และ scheduling นำส่วนคำนวณเวลาว่าง
+ไปใช้ต่อโดยหักคิวที่จองแล้วออกอีกชั้นหนึ่ง
 """
 from __future__ import annotations
 
+import logging
 from datetime import date
 
+from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.db.models import Q
 
+from apps.clinics.models import Clinic
+from apps.common.roles import UserRole
 from apps.common.time_intervals import IntervalSet, TimeInterval
 from apps.common.timezone_utils import local_day_bounds
 from apps.doctors.models import Doctor, DoctorSchedule, RecurrenceType, TimeBlock
+
+logger = logging.getLogger(__name__)
+
+
+class DoctorRegistrationService:
+    """
+    รับแพทย์เข้าทำงาน — สร้างบัญชีผู้ใช้และโปรไฟล์แพทย์พร้อมกัน
+
+    แพทย์หนึ่งคนต้องมีทั้งบัญชีล็อกอิน (accounts.User role=doctor) และโปรไฟล์
+    (doctors.Doctor) การสร้างทีละอย่างผ่าน API แยกกันมีความเสี่ยงว่าถ้าขั้นที่สอง
+    ล้มเหลวจะเหลือบัญชีค้างที่ล็อกอินได้แต่ไม่มีตารางออกตรวจ จึงรวมไว้ใน
+    transaction เดียวที่นี่
+    """
+
+    def __init__(self, clinic: Clinic, created_by=None) -> None:
+        self.clinic = clinic
+        self.created_by = created_by
+
+    @transaction.atomic
+    def create_doctor(
+        self,
+        *,
+        email: str,
+        full_name: str,
+        password: str,
+        display_name: str,
+        phone: str = "",
+        specialties: str = "",
+        color: str = "#2563eb",
+    ) -> Doctor:
+        """สร้างบัญชี + โปรไฟล์แพทย์ในสาขานี้ (คืน Doctor ที่บันทึกแล้ว)"""
+        user_model = get_user_model()
+
+        user = user_model.objects.create_user(
+            email=email,
+            password=password,
+            full_name=full_name,
+            phone=phone,
+            role=UserRole.DOCTOR,
+            clinic=self.clinic,
+        )
+
+        doctor = Doctor(
+            user=user,
+            clinic=self.clinic,
+            display_name=display_name or full_name,
+            specialties=specialties,
+            color=color,
+        )
+        doctor.full_clean()
+        doctor.save()
+
+        logger.info("รับแพทย์ใหม่ #%s เข้าสาขา %s", doctor.pk, self.clinic.code)
+        return doctor
 
 
 class DoctorAvailabilityService:

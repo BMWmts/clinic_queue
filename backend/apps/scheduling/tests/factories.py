@@ -83,11 +83,19 @@ class ClinicTestDataMixin:
         display_name: str = "พญ. ทดสอบ",
         weekly_hours: list[tuple[int, time, time]] | None = None,
     ) -> Doctor:
-        """สร้างแพทย์พร้อมตารางออกตรวจ (ค่าเริ่มต้น: จันทร์ 09:00-17:00)"""
+        """
+        สร้างแพทย์พร้อมตารางออกตรวจ (ค่าเริ่มต้น: จันทร์ 09:00-17:00)
+
+        ส่ง `weekly_hours=[]` เพื่อสร้างแพทย์ที่ยังไม่มีตารางออกตรวจเลย
+        (ต่างจากไม่ส่งค่ามา ซึ่งจะได้ตารางเริ่มต้น)
+        """
         user = self.create_user(clinic=clinic, email=email, role=UserRole.DOCTOR)
         doctor = Doctor.objects.create(user=user, clinic=clinic, display_name=display_name)
 
-        for day_of_week, start_time, end_time in weekly_hours or [(0, time(9, 0), time(17, 0))]:
+        default_hours = [(0, time(9, 0), time(17, 0))]
+        for day_of_week, start_time, end_time in (
+            default_hours if weekly_hours is None else weekly_hours
+        ):
             DoctorSchedule.objects.create(
                 doctor=doctor,
                 clinic=clinic,

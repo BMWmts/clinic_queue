@@ -10,20 +10,22 @@ from datetime import date
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from apps.common.branch import resolve_request_clinic
 from apps.common.mixins import BranchScopedQuerySetMixin
 from apps.common.permissions import IsBranchManagerOrReadOnly
 from apps.doctors.models import Doctor, DoctorSchedule, TimeBlock
 from apps.doctors.serializers import (
+    DoctorCreateSerializer,
     DoctorScheduleSerializer,
     DoctorSerializer,
     TimeBlockSerializer,
 )
-from apps.doctors.services import DoctorAvailabilityService
+from apps.doctors.services import DoctorAvailabilityService, DoctorRegistrationService
 
 
 def parse_date_param(raw_value: str | None, field_name: str = "date") -> date:
@@ -51,6 +53,23 @@ class DoctorViewSet(BranchScopedQuerySetMixin, viewsets.ModelViewSet):
         if is_active is not None:
             queryset = queryset.filter(is_active=is_active.lower() in {"1", "true", "yes"})
         return queryset
+
+    @extend_schema(request=DoctorCreateSerializer, responses={201: DoctorSerializer})
+    def create(self, request: Request, *args, **kwargs) -> Response:
+        """
+        POST /api/doctors/ — รับแพทย์ใหม่เข้าทำงาน
+
+        สร้างบัญชีผู้ใช้ (role=doctor) และโปรไฟล์แพทย์ให้พร้อมกันในคำสั่งเดียว
+        หลังจากนี้ต้องเพิ่มตารางออกตรวจด้วย มิฉะนั้นระบบจะยังจองคิวให้แพทย์คนนี้ไม่ได้
+        """
+        clinic = resolve_request_clinic(request)
+        serializer = DoctorCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        registration = DoctorRegistrationService(clinic=clinic, created_by=request.user)
+        doctor = registration.create_doctor(**serializer.validated_data)
+
+        return Response(DoctorSerializer(doctor).data, status=status.HTTP_201_CREATED)
 
     @extend_schema(
         parameters=[OpenApiParameter("date", str, description="วันที่ต้องการดู (YYYY-MM-DD)")],

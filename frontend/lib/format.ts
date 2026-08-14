@@ -83,6 +83,16 @@ export function shiftIsoDate(isoDate: string, days: number): string {
   return isoDateOf(date);
 }
 
+/**
+ * ประกอบวันที่ (YYYY-MM-DD) กับเวลา (HH:mm) จากช่องกรอกให้เป็น ISO string เวลาไทย
+ *
+ * ช่อง input แบบ date/time ของเบราว์เซอร์ให้ค่ามาเป็น "เวลานาฬิกา" ที่ไม่มีโซนเวลา
+ * ต้องระบุ +07:00 ให้ชัดเจน มิฉะนั้น backend จะตีความเป็น UTC แล้วเวลาเคลื่อน 7 ชั่วโมง
+ */
+export function toBangkokIso(isoDate: string, clockTime: string): string {
+  return `${isoDate}T${clockTime.length === 5 ? `${clockTime}:00` : clockTime}+07:00`;
+}
+
 /** สีประจำสถานะคิว — ใช้ให้ตรงกันทุกหน้าจอ */
 export const STATUS_STYLES: Record<AppointmentStatus, { label: string; className: string }> = {
   booked: { label: "จองแล้ว", className: "bg-slate-100 text-slate-700 border-slate-200" },

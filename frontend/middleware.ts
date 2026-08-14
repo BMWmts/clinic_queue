@@ -8,7 +8,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { REFRESH_TOKEN_COOKIE } from "@/lib/auth/cookies";
 
-const DASHBOARD_PREFIXES = ["/queue", "/calendar", "/patients", "/branches", "/reports"];
+const DASHBOARD_PREFIXES = [
+  "/queue",
+  "/calendar",
+  "/patients",
+  "/doctors",
+  "/branches",
+  "/reports",
+];
 
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
@@ -32,5 +39,13 @@ export function middleware(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ["/login", "/queue/:path*", "/calendar/:path*", "/patients/:path*", "/branches/:path*", "/reports/:path*"],
+  matcher: [
+    "/login",
+    "/queue/:path*",
+    "/calendar/:path*",
+    "/patients/:path*",
+    "/doctors/:path*",
+    "/branches/:path*",
+    "/reports/:path*",
+  ],
 };
