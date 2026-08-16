@@ -24,6 +24,9 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
+# การตั้งค่าเครื่องมือเฉพาะเครื่อง (ไม่เกี่ยวกับระบบ และมี path ของเครื่องผู้พัฒนา)
+.claude/
+
 # Static / media ที่ generate เอง
 backend/staticfiles/
 backend/media/
