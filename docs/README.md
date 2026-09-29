@@ -26,6 +26,7 @@ Every entry is bilingual: **TH** (Thai) and **EN** (English).
 | 11 | [11-devops-and-tests.md](11-devops-and-tests.md) | Docker, env, migrations, seed, ชุดเทสต์ / tests |
 | 12 | [12-api-reference.md](12-api-reference.md) | สรุป endpoint ทั้งหมด + ไฟล์ที่รับผิดชอบ / endpoint → file map |
 | 13 | [13-acid-and-transactions.md](13-acid-and-transactions.md) | ACID, transaction, row lock, constraint กันคิวชน / ACID map, locking, constraints |
+| 14 | [14-database-schema.md](14-database-schema.md) | ตารางทั้งหมด, ER diagram, FK/on_delete, index, constraint / tables, ER diagram, relationships |
 
 ---
 
