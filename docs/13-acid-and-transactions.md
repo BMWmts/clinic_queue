@@ -1,10 +1,9 @@
 # 13 — ACID & Transactions — ระบบรักษาความถูกต้องของข้อมูลอย่างไร / How the system keeps data correct
 
 **TH:** เอกสารนี้สรุปว่าระบบจองคิวทำตามหลัก ACID (Atomicity, Consistency, Isolation, Durability)
-ไว้ที่จุดไหนบ้าง ใช้กลไกอะไร และยังเหลือช่องโหว่ตรงไหนที่ควรปิด
+ไว้ที่จุดไหนบ้าง และใช้กลไกอะไร
 
-**EN:** This page maps each ACID property to the exact code that enforces it, and lists the
-remaining gaps.
+**EN:** This page maps each ACID property to the exact code that enforces it.
 
 > สถานะ ณ วันที่ 2026-09-29 — ถ้าแก้โค้ดส่วน transaction ให้อัปเดตเอกสารนี้ด้วย
 
@@ -16,7 +15,7 @@ remaining gaps.
 |---|---|---|
 | **A**tomicity | ✅ ครบในจุดสำคัญ | `transaction.atomic()` + savepoint |
 | **C**onsistency | ✅ สองชั้น (app + DB) | `CheckConstraint`, `UniqueConstraint`, exclusion constraint, state machine |
-| **I**solation | ⚠️ ครบตอนจอง/เลื่อน, ยังขาดตอนเปลี่ยนสถานะ | `select_for_update()` ล็อกแถวทรัพยากร |
+| **I**solation | ✅ ครบทั้งจอง/เลื่อน/เปลี่ยนสถานะ/ยกเลิก | `select_for_update()` ล็อกแถวคิว + แถวทรัพยากร |
 | **D**urability | ✅ | PostgreSQL 16 (WAL) + Docker named volume |
 
 > ⚠️ **สำคัญ:** การรับประกันทั้งหมดนี้ใช้ได้เต็มรูปแบบ **บน PostgreSQL เท่านั้น**
@@ -33,7 +32,8 @@ remaining gaps.
 | งาน / Operation | ไฟล์ / File | รายละเอียด |
 |---|---|---|
 | จองคิว `book()` | [scheduling/services.py](../backend/apps/scheduling/services.py) | ล็อกทรัพยากร → เช็ค slot ว่าง → บันทึก อยู่ใน `transaction.atomic()` เดียว |
-| เลื่อนคิว `reschedule()` | [scheduling/services.py](../backend/apps/scheduling/services.py) | เหมือน `book()` แต่ยกเว้นคิวตัวเองตอนเช็คชน |
+| เลื่อนคิว `reschedule()` | [scheduling/services.py](../backend/apps/scheduling/services.py) | ล็อกแถวคิว → ตรวจสถานะ → ล็อกแพทย์ → เช็คชน (ยกเว้นตัวเอง) → บันทึก ใน transaction เดียว |
+| เปลี่ยนสถานะ `change_status()` / ยกเลิก `cancel()` | [scheduling/services.py](../backend/apps/scheduling/services.py) | ล็อกแถวคิว → ตรวจ state machine กับค่าล่าสุด → บันทึก |
 | บันทึกคิว `_save_guarding_overlap()` | [scheduling/services.py](../backend/apps/scheduling/services.py) | `atomic()` ซ้อนอีกชั้น = **savepoint** เพื่อให้จับ `IntegrityError` แล้ว transaction หลักยังใช้ต่อได้ |
 | รับแพทย์ใหม่ `create_doctor()` | [doctors/services.py](../backend/apps/doctors/services.py) | สร้าง `User` + `Doctor` ใน transaction เดียว — ไม่มีทางเหลือบัญชีค้างที่ไม่มีโปรไฟล์แพทย์ |
 | ลงทะเบียนคนไข้ `create_patient()` | [patients/services.py](../backend/apps/patients/services.py) | แต่ละรอบของการ retry รหัสคนไข้อยู่ใน `atomic()` ของตัวเอง |
@@ -168,44 +168,44 @@ def _lock_resource(self, doctor):
   แล้ว service retry ด้วยเลขใหม่ (เลือกแบบนี้เพื่อไม่ต้องมีตารางนับที่เป็นคอขวด)
 - SMS reminder สองงานรันพร้อมกัน → unique constraint ให้สร้าง log ได้แค่ตัวเดียว อีกตัวได้ `None` และข้ามไป
 
-### ⚠️ ช่องโหว่ที่ยังเหลือ / Known gaps
+### ✅ ตอนเปลี่ยนสถานะ / ยกเลิก / เลื่อนคิว — ล็อกแถวคิว
 
-#### 1. `change_status()` และ `cancel()` ไม่มี transaction และไม่ล็อกแถว
+**TH:** ปัญหาเดิม (lost update): view โหลดคิวไว้ก่อนเข้า transaction ถ้าพนักงานสองคนแก้คิวเดียวกันพร้อมกัน
+ทั้งคู่จะตรวจ state machine กับสถานะเก่า แล้วคน save ทีหลังชนะ เช่น คิวที่ถูกยกเลิกแล้วถูกเขียนทับเป็น `checked_in`
 
-ไฟล์: [scheduling/services.py](../backend/apps/scheduling/services.py) — `AppointmentBookingService.change_status()` / `cancel()`
-
-**ปัญหา (lost update):** instance ของคิวถูกโหลดใน view แล้วนำมาตรวจ state machine แล้ว save เลย
-
-```
- พนักงาน A (ยกเลิก)                  พนักงาน B (เช็คอิน)
- อ่านคิว → status = booked           อ่านคิว → status = booked
- booked → cancelled  ✔ ผ่าน          booked → checked_in  ✔ ผ่าน
- save(status=cancelled)
-                                     save(status=checked_in, checked_in_at=...)
-```
-
-ผลลัพธ์ขึ้นกับว่าใคร save ทีหลัง (last write wins) และข้าม state machine ได้ เช่น คิวที่ถูกยกเลิกแล้ว
-ถูกเขียนทับเป็น `checked_in` ทั้งที่ `cancelled → checked_in` ไม่อยู่ในเส้นทางที่อนุญาต
-
-#### 2. `reschedule()` ตรวจสถานะนอก transaction
-
-เช็ค `status in {COMPLETED, CANCELLED}` บน instance เก่าก่อนเข้า `atomic()` และล็อกเฉพาะแถวแพทย์
-ไม่ล็อกแถวคิว → ถ้ามีคนยกเลิกคิวพร้อมกัน คิวที่ยกเลิกแล้วอาจยังถูกเลื่อนเวลาได้
-
-#### วิธีแก้ที่แนะนำ / Recommended fix
+ตอนนี้ `change_status()`, `cancel()` และ `reschedule()` ล็อกแถวคิวก่อนตรวจทุกครั้งผ่าน `_lock_appointment()`:
 
 ```python
-def change_status(self, appointment: Appointment, new_status: str) -> Appointment:
-    with transaction.atomic():
-        # โหลดสถานะล่าสุดพร้อมล็อก — ตรวจ state machine กับข้อมูลจริง ไม่ใช่ข้อมูลเก่าใน memory
-        appointment = Appointment.objects.select_for_update().get(pk=appointment.pk)
-        appointment.apply_status(new_status)
-        appointment.save(update_fields=[...])
-    return appointment
+@staticmethod
+def _lock_appointment(appointment: Appointment) -> None:
+    Appointment.objects.select_for_update().only("pk").get(pk=appointment.pk)  # รอจนได้ล็อก
+    appointment.refresh_from_db()  # โหลดค่าที่ commit ล่าสุดกลับเข้า instance เดิม
 ```
 
-ใช้รูปแบบเดียวกันกับ `cancel()` และใน `reschedule()` ให้ย้ายการเช็คสถานะเข้าไปใน `atomic()`
-หลังล็อกแถวคิวแล้ว พร้อมเขียนเทสต์กรณีเปลี่ยนสถานะพร้อมกัน (ต้องรันบน PostgreSQL)
+```
+ พนักงาน A (ยกเลิก)                  พนักงาน B (เช็คอิน, instance เก่า)
+ BEGIN + LOCK คิว #42  ✔
+                                     BEGIN + LOCK คิว #42  ⏳ (รอ)
+ booked → cancelled, COMMIT
+                                     ✔ ได้ล็อก → refresh → status = cancelled
+                                     cancelled → checked_in ❌ InvalidStatusTransitionError
+```
+
+- refresh เข้า **instance เดิม** (ไม่สร้างตัวใหม่) เพื่อให้ view ใช้ instance นั้นสร้าง response ต่อได้
+- `reschedule()` ตรวจ "เสร็จ/ยกเลิกแล้วเลื่อนไม่ได้" **หลัง** ล็อก และเลือกแพทย์จากค่าล่าสุด
+- **ลำดับการล็อกคงที่: คิว → แพทย์/สาขา** (`book()` ล็อกแค่แพทย์, `change_status()` ล็อกแค่คิว)
+  ไม่มีเส้นทางไหนล็อกแพทย์ก่อนคิว จึงไม่เกิด deadlock
+
+### เทสต์ที่ยืนยัน / Tests
+
+ไฟล์: [scheduling/tests/test_concurrent_updates.py](../backend/apps/scheduling/tests/test_concurrent_updates.py)
+
+| ชุดเทสต์ | รันบน | ตรวจอะไร |
+|---|---|---|
+| `StaleInstanceTests` | sqlite + PostgreSQL | ส่ง instance เก่าเข้า service → ต้องถูกตรวจกับสถานะล่าสุดใน DB |
+| `RowLockConcurrencyTests` | PostgreSQL เท่านั้น | สองเธรดแย่งแถวเดียวกันจริง: เธรดรองต้อง **รอ** ล็อก แล้วถูกปฏิเสธหลังเธรดหลักยกเลิกคิว |
+
+เทสต์ชุดนี้ถูกยืนยันแล้วว่า **ล้มกับโค้ดก่อนแก้** (5 จาก 6 เคส) และผ่านทั้งหมดหลังแก้
 
 ---
 
@@ -243,6 +243,7 @@ def change_status(self, appointment: Appointment, new_status: str) -> Appointmen
 
 - [ ] งานที่เขียนหลายแถว/หลายตาราง → ห่อด้วย `transaction.atomic()` ใน service class
 - [ ] อ่าน → ตรวจ → เขียน แถวที่คนอื่นอาจแก้พร้อมกัน → `select_for_update()` ภายใน transaction
+- [ ] ล็อกหลายแถว → ตามลำดับ "คิว → แพทย์/สาขา" เสมอ (กัน deadlock)
 - [ ] สร้าง/แก้คิว → ผ่าน `AppointmentBookingService` เท่านั้น ห้าม `Appointment.objects.create()` ตรง
 - [ ] จับ `IntegrityError` → ต้องอยู่ใน `atomic()` ชั้นในเสมอ (savepoint)
 - [ ] ส่ง WebSocket / Celery task / SMS → ใช้ `transaction.on_commit()` หรือ `delay_on_commit()`

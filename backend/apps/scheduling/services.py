@@ -332,14 +332,20 @@ class AppointmentBookingService:
         new_start: datetime,
         new_doctor: Doctor | None = None,
     ) -> Appointment:
-        """เลื่อน/สลับเวลาคิว (หน้าจอ drag-and-drop เรียกผ่าน endpoint นี้)"""
-        if appointment.status in {AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED}:
-            raise BookingConflictError("คิวที่เสร็จสิ้นหรือยกเลิกแล้วเลื่อนเวลาไม่ได้")
+        """
+        เลื่อน/สลับเวลาคิว (หน้าจอ drag-and-drop เรียกผ่าน endpoint นี้)
 
-        doctor = new_doctor if new_doctor is not None else appointment.doctor
+        ตรวจสถานะหลังล็อกแถวคิวแล้วเท่านั้น — ถ้าตรวจกับ instance ที่โหลดไว้ใน view
+        คิวที่เพิ่งถูกยกเลิกโดยพนักงานอีกคนจะยังถูกเลื่อนได้
+        """
         interval = self._build_interval(appointment.service_type, new_start)
 
         with transaction.atomic():
+            self._lock_appointment(appointment)
+            if appointment.status in {AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED}:
+                raise BookingConflictError("คิวที่เสร็จสิ้นหรือยกเลิกแล้วเลื่อนเวลาไม่ได้")
+
+            doctor = new_doctor if new_doctor is not None else appointment.doctor
             self._lock_resource(doctor)
             availability = SlotAvailabilityService(self.clinic, appointment.service_type, doctor)
 
@@ -361,24 +367,33 @@ class AppointmentBookingService:
         return appointment
 
     def change_status(self, appointment: Appointment, new_status: str) -> Appointment:
-        """เปลี่ยนสถานะคิวตาม state machine ที่กำหนดไว้ใน model"""
-        appointment.apply_status(new_status)
-        appointment.save(
-            update_fields=[
-                "status",
-                "checked_in_at",
-                "started_at",
-                "completed_at",
-                "updated_at",
-            ]
-        )
+        """
+        เปลี่ยนสถานะคิวตาม state machine ที่กำหนดไว้ใน model
+
+        ล็อกแถวคิวก่อนตรวจ state machine เพื่อกัน lost update: ถ้าพนักงานสองคน
+        เปลี่ยนสถานะคิวเดียวกันพร้อมกัน คนที่สองจะถูกตรวจกับสถานะล่าสุดที่คนแรก commit แล้ว
+        """
+        with transaction.atomic():
+            self._lock_appointment(appointment)
+            appointment.apply_status(new_status)
+            appointment.save(
+                update_fields=[
+                    "status",
+                    "checked_in_at",
+                    "started_at",
+                    "completed_at",
+                    "updated_at",
+                ]
+            )
         return appointment
 
     def cancel(self, appointment: Appointment, reason: str = "") -> Appointment:
         """ยกเลิกคิว — เวลาที่ว่างคืนจะถูกนำไปเสนอให้คิวอื่นทันที"""
-        appointment.apply_status(AppointmentStatus.CANCELLED)
-        appointment.cancelled_reason = reason[:255]
-        appointment.save(update_fields=["status", "cancelled_reason", "updated_at"])
+        with transaction.atomic():
+            self._lock_appointment(appointment)
+            appointment.apply_status(AppointmentStatus.CANCELLED)
+            appointment.cancelled_reason = reason[:255]
+            appointment.save(update_fields=["status", "cancelled_reason", "updated_at"])
         return appointment
 
     # ------------------------------------------------------------------
@@ -415,6 +430,20 @@ class AppointmentBookingService:
         return TimeInterval(
             scheduled_start, scheduled_start + timedelta(minutes=service_type.duration_minutes)
         )
+
+    @staticmethod
+    def _lock_appointment(appointment: Appointment) -> None:
+        """
+        ล็อกแถวคิวแล้วโหลดค่าล่าสุดกลับเข้า instance เดิม
+
+        instance ที่ส่งเข้ามามักถูกโหลดใน view ก่อนเข้า transaction จึงอาจเก่าแล้ว
+        หลังได้ล็อก ค่าที่ refresh มาคือค่าที่ commit ล่าสุด และไม่มีใครแก้แถวนี้ได้
+        จนกว่า transaction ของเราจะจบ — ต้องเรียกภายใน transaction เท่านั้น
+
+        ลำดับการล็อกในระบบคือ "คิว → แพทย์/สาขา" เสมอ เพื่อไม่ให้เกิด deadlock
+        """
+        Appointment.objects.select_for_update().only("pk").get(pk=appointment.pk)
+        appointment.refresh_from_db()
 
     def _lock_resource(self, doctor: Doctor | None) -> None:
         """
