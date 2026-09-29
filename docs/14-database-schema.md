@@ -28,7 +28,8 @@ reasoning behind each `on_delete` rule, index and constraint.
 | | `patients_patientnote` | โน้ตสะสมของคนไข้ |
 | 📱 แจ้งเตือน | `notifications_smslog` | log การส่ง SMS ทุกข้อความ |
 
-นอกจากนี้ยังมีตารางของ framework (ดู [หัวข้อ 8](#8-ตารางของ-framework--framework-tables))
+ฐานข้อมูลจริงมีทั้งหมด **21 ตาราง** — อีก 11 ตารางเป็นโครงสร้างพื้นฐานที่ Django และ SimpleJWT สร้างให้อัตโนมัติ
+(ดู [หัวข้อ 8](#8-ตารางของ-framework--framework-tables))
 
 ---
 
@@ -440,15 +441,111 @@ filter ทุก query ด้วย `clinic` ของผู้ใช้เส�
 
 ## 8. ตารางของ framework / Framework tables
 
-ไม่ได้ออกแบบเอง แต่มีอยู่ในฐานข้อมูล:
+**TH:** นอกจาก 10 ตารางของคลินิก ฐานข้อมูลยังมีอีก **11 ตาราง** ที่เราไม่ได้ออกแบบเอง
+แต่ Django และ library สร้างให้อัตโนมัติ
 
-| ตาราง | มาจาก | ใช้ทำอะไร |
+**EN:** Besides the 10 domain tables there are 11 infrastructure tables created automatically by
+Django and SimpleJWT.
+
+### 8.1 ทำไม Django ถึงสร้างให้ / Why they exist
+
+ใน Django ระบบถูกแบ่งเป็น **app** ย่อย ๆ ทุก app (ทั้งที่เราเขียนเองและที่มากับ Django) มี `models.py`
+และ `migrations/` ของตัวเอง ตอนรัน `python manage.py migrate` Django จะไล่ **ทุก app ใน `INSTALLED_APPS`**
+แล้วสร้างตารางให้ครบ โดยไม่แยกว่าเป็น app ของใคร
+
+ตารางแต่ละตัวจึงมาจาก app ที่เราเปิดใช้ใน [settings.py](../backend/config/settings.py):
+
+```python
+INSTALLED_APPS = [
+    "django.contrib.admin",          # → django_admin_log
+    "django.contrib.auth",           # → auth_permission, auth_group, auth_group_permissions
+    "django.contrib.contenttypes",   # → django_content_type
+    "django.contrib.sessions",       # → django_session
+    ...
+    "rest_framework_simplejwt.token_blacklist",  # → token_blacklist_* (2 ตาราง)
+    ...
+    "apps.accounts",                 # → accounts_user (+ user_groups, user_user_permissions)
+    "apps.clinics",                  # → clinics_clinic
+    ...                              # ← 10 ตารางที่ออกแบบเอง
+]
+```
+
+ส่วน `django_migrations` เป็นกรณีพิเศษ — คำสั่ง `migrate` สร้างเองเพื่อจดว่ารัน migration ไหนไปแล้ว
+ทุกโปรเจกต์ Django จึงมีตารางนี้เสมอ
+
+**ทำไมใช้ app สำเร็จรูปแทนเขียนเอง** — เป็นงานที่ทุกเว็บต้องมี และเขียนเองให้ปลอดภัยได้ยาก
+Django เตรียมไว้ให้แบบผ่านการทดสอบแล้ว (แนวคิด "batteries included"):
+
+| App | ให้อะไร | ถ้าไม่ใช้ ต้องเขียนเอง |
 |---|---|---|
-| `accounts_user_groups`, `accounts_user_user_permissions` | `PermissionsMixin` | M2M ของ Django auth (ระบบใช้ `role` แทนเป็นหลัก) |
-| `auth_group`, `auth_permission`, `auth_group_permissions` | `django.contrib.auth` | |
-| `token_blacklist_outstandingtoken`, `token_blacklist_blacklistedtoken` | simplejwt | ทำให้ logout ยกเลิก refresh token ได้จริง |
-| `django_migrations` | Django | บันทึกว่า migration ไหนรันแล้ว |
-| `django_content_type`, `django_admin_log`, `django_session` | Django | admin / sessions |
+| `auth` | ระบบผู้ใช้, **hash รหัสผ่าน**, ตรวจรหัสผ่าน | การเข้ารหัสรหัสผ่าน — พลาดง่ายและอันตราย |
+| `admin` | หน้า `/admin/` ดู/แก้ข้อมูลทุกตารางได้ทันที | หน้าจัดการข้อมูลหลังบ้านทั้งหมด |
+| `contenttypes` | ทะเบียน model ที่ `auth` และ `admin` ต้องใช้ | (เป็นฐานของสองตัวบน) |
+| `sessions` | จำสถานะ login ของหน้า admin | ระบบ session |
+| `token_blacklist` | ยกเลิก JWT ได้จริงตอน logout | ระบบเพิกถอน token |
+
+**ทำไม `accounts_user` พ่วงมาอีก 2 ตาราง** — model `User` สืบทอดคลาสสำเร็จรูปของ Django
+([apps/accounts/models.py](../backend/apps/accounts/models.py)):
+
+```python
+class User(AbstractBaseUser, PermissionsMixin):
+```
+
+`PermissionsMixin` มีฟิลด์ `groups` และ `user_permissions` แบบ many-to-many ซึ่งฐานข้อมูลต้องใช้ตารางกลาง
+Django จึงสร้าง `accounts_user_groups` และ `accounts_user_user_permissions` ให้ — เราสืบทอด mixin นี้
+เพราะหน้า `/admin/` ใช้มันเช็คสิทธิ์การเข้าใช้
+
+### 8.2 แต่ละตารางทำอะไร / What each table does
+
+> จำนวนแถวเป็นตัวอย่างจากฐานข้อมูล dev ณ 2026-09-30
+
+#### 🔐 ระบบสิทธิ์ของ Django — 5 ตาราง (แทบไม่ได้ใช้)
+
+| ตาราง | แถว | หน้าที่ |
+|---|---|---|
+| `auth_permission` | 68 | รายการสิทธิ์อัตโนมัติ 4 สิทธิ์ต่อ model (add/change/delete/view) |
+| `auth_group` | 0 | กลุ่มผู้ใช้ เช่น "ทีมพยาบาล" |
+| `auth_group_permissions` | 0 | กลุ่มไหนมีสิทธิ์อะไร |
+| `accounts_user_groups` | 0 | ผู้ใช้คนไหนอยู่กลุ่มไหน |
+| `accounts_user_user_permissions` | 0 | สิทธิ์พิเศษรายคน |
+
+**ทำไมเกือบทั้งหมดว่าง:** ระบบนี้ **ไม่ได้ใช้** ระบบสิทธิ์ของ Django แต่ใช้คอลัมน์ `role` ใน `accounts_user`
+(super_admin / admin / staff / doctor) แล้วเช็คสิทธิ์ในโค้ดเอง ([apps/common/permissions.py](../backend/apps/common/permissions.py))
+ซึ่งเรียบง่ายและตรงกับ 4 role ใน spec มากกว่า ตารางยังต้องมีอยู่เพราะ `PermissionsMixin` และหน้า admin อ้างถึง
+
+#### 🔑 ระบบ Login (SimpleJWT) — 2 ตาราง (ใช้งานจริง)
+
+| ตาราง | หน้าที่ |
+|---|---|
+| `token_blacklist_outstandingtoken` | สมุดบันทึก refresh token ทุกใบที่ระบบออกให้ตอน login |
+| `token_blacklist_blacklistedtoken` | token ที่ถูกยกเลิกแล้ว |
+
+ถ้าไม่มี 2 ตารางนี้ การ logout จะแค่ลบ cookie แต่ token เดิมยังใช้ได้จนหมดอายุ (7 วัน) —
+เมื่อมีตารางนี้ logout จะเพิกถอน token ได้จริงทันที และทุกครั้งที่ต่ออายุ token ใบเก่าจะถูกยกเลิกด้วย
+(`BLACKLIST_AFTER_ROTATION`) ใครขโมย token เก่าไปก็ใช้ไม่ได้
+
+> ข้อมูลในสองตารางนี้เป็นสถานะการ login ของแต่ละเครื่อง — ไม่ถูกรวมใน [DB/clinic.sql](../DB/clinic.sql)
+
+#### ⚙️ ตารางระบบของ Django — 4 ตาราง
+
+| ตาราง | หน้าที่ | ความสำคัญ |
+|---|---|---|
+| `django_migrations` | บันทึกว่า migration ไหนรันแล้ว | **สำคัญมาก** — ถ้าหาย `migrate` จะพยายามสร้างตารางซ้ำแล้ว error |
+| `django_content_type` | ทะเบียนว่าระบบมี model อะไรบ้าง | ใช้ภายใน เชื่อม `auth_permission` กับ model |
+| `django_admin_log` | ประวัติการแก้ข้อมูลผ่านหน้า `/admin/` | มีข้อมูลเมื่อมีคนใช้หน้า admin |
+| `django_session` | session ของหน้า `/admin/` | ใช้เฉพาะหน้า admin — หน้าเว็บหลักใช้ JWT |
+
+### 8.3 ตัดทิ้งได้ไหม / Can they be removed?
+
+- ตัด `admin` + `sessions` ออกจาก `INSTALLED_APPS` ได้ (หาย 2 ตาราง) แต่จะเสียหน้า `/admin/` ที่ใช้ตรวจ/แก้ข้อมูลตอนพัฒนา
+- ตัด `auth` + `contenttypes` **ไม่ได้** — การ hash รหัสผ่านและ JWT พึ่งสองตัวนี้
+- ตารางว่างแทบไม่กินพื้นที่และไม่ทำให้ระบบช้าลง — **ไม่คุ้มที่จะตัด**
+- **ห้ามลบตารางเหล่านี้ด้วยมือ** แม้จะว่าง เพราะ Django อ้างถึงอยู่ — หน้า admin หรือ `migrate` จะพัง
+
+### 8.4 สรุปสำหรับวิทยานิพนธ์ / One-line summary
+
+> ระบบมี 10 ตารางหลักตามการออกแบบ ส่วนอีก 11 ตารางเป็นตารางพื้นฐานของ Django framework และ SimpleJWT
+> ที่ใช้สำหรับระบบยืนยันตัวตน การจัดการสิทธิ์ และการบันทึก migration
 
 ---
 

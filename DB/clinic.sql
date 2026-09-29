@@ -2,7 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict kAhvTxeBRdxwme1whsna8AsXdb7wDqJKCrMWyrh1Frwej7T9fptA56ntnrW6ClW
 
 -- Dumped from database version 18.4
 -- Dumped by pg_dump version 18.4
@@ -10,7 +9,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -672,395 +670,295 @@ ALTER TABLE public.token_blacklist_outstandingtoken ALTER COLUMN id ADD GENERATE
 -- Data for Name: accounts_user; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) FROM stdin;
-1	pbkdf2_sha256$1000000$ifLzdKhyR9mpsKEmtNH9xa$LlwfPcAfPj5C+LFw6Hw+yLZBDE+G2HfnVLkN4mNqhsw=	\N	t	root@clinic.test	ผู้ดูแลระบบ		super_admin	t	t	2026-08-15 00:13:42.778323+07	\N
-2	pbkdf2_sha256$1000000$gRCoivDKSlQtUMefW3ckBo$FdXl1vvI/tcqxXEbS8jQuA9C+AU8g/ZJE7jXnSxbGpk=	\N	f	admin.bkk@clinic.test	ผู้จัดการ คลินิกสาขาสุขุมวิท		admin	t	f	2026-08-15 00:13:43.173562+07	1
-3	pbkdf2_sha256$1000000$xkXBbzLsgWApiF8CWTReW5$Lc4Ha0FPIsvDOmAPzgRou21Zati52CggZiPrPQ68EbY=	\N	f	staff.bkk@clinic.test	เจ้าหน้าที่ คลินิกสาขาสุขุมวิท		staff	t	f	2026-08-15 00:13:43.532786+07	1
-4	pbkdf2_sha256$1000000$rowpANZ0aCMoGLpOVThWjG$hDffqt+nUz3bzYbC3SaYBNbuy68OoUjXa5sRle8ZNUM=	\N	f	admin.cnx@clinic.test	ผู้จัดการ คลินิกสาขาเชียงใหม่		admin	t	f	2026-08-15 00:13:43.923382+07	2
-5	pbkdf2_sha256$1000000$ozNyNH2VFgXKIPInKWKwlT$YH3cRtG+wBPkp8BRxksheC0/Up2ZBrWVGAC5p+3Sc5A=	\N	f	staff.cnx@clinic.test	เจ้าหน้าที่ คลินิกสาขาเชียงใหม่		staff	t	f	2026-08-15 00:13:44.295881+07	2
-6	pbkdf2_sha256$1000000$T83j76UYewTozcrwFUvDgp$rM5VD5IIOY+0xEc2i6YGeeabpOrGKrVyJaGNvvgAAyQ=	\N	f	doctor.ploy@clinic.test	พญ. พลอย รักษาดี		doctor	t	f	2026-08-15 00:13:44.681401+07	1
-7	pbkdf2_sha256$1000000$luRWJ0MwdOoC6rtpaOVqGI$6zlSHeNEsqvmG7YDM6d5pi8fJ879vpUvQTwauyquKLk=	\N	f	doctor.non@clinic.test	นพ. นนท์ ผิวใส		doctor	t	f	2026-08-15 00:13:45.126697+07	1
-8	pbkdf2_sha256$1000000$bGnxbjM90Pteiatril9g6r$MZwneevFzT+TddEreQf1k6KUVl5CC7yVt28dcbG1HzE=	\N	f	doctor.mint@clinic.test	พญ. มิ้นท์ ใจงาม		doctor	t	f	2026-08-15 00:13:45.543817+07	2
-11	pbkdf2_sha256$1000000$cKgbAhU8a6gDDMGFNV6BJO$kH7XGvcfuxvstfUqIGokZgq5/fogUY+hUVWWxASSebM=	\N	f	somjai@gmail.com	พญ.สมใจ ใจสม	089999999	doctor	t	f	2026-08-15 01:34:07.757563+07	2
-\.
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (1, 'pbkdf2_sha256$1000000$ifLzdKhyR9mpsKEmtNH9xa$LlwfPcAfPj5C+LFw6Hw+yLZBDE+G2HfnVLkN4mNqhsw=', NULL, true, 'root@clinic.test', 'ผู้ดูแลระบบ', '', 'super_admin', true, true, '2026-08-15 00:13:42.778323+07', NULL);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (2, 'pbkdf2_sha256$1000000$gRCoivDKSlQtUMefW3ckBo$FdXl1vvI/tcqxXEbS8jQuA9C+AU8g/ZJE7jXnSxbGpk=', NULL, false, 'admin.bkk@clinic.test', 'ผู้จัดการ คลินิกสาขาสุขุมวิท', '', 'admin', true, false, '2026-08-15 00:13:43.173562+07', 1);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (3, 'pbkdf2_sha256$1000000$xkXBbzLsgWApiF8CWTReW5$Lc4Ha0FPIsvDOmAPzgRou21Zati52CggZiPrPQ68EbY=', NULL, false, 'staff.bkk@clinic.test', 'เจ้าหน้าที่ คลินิกสาขาสุขุมวิท', '', 'staff', true, false, '2026-08-15 00:13:43.532786+07', 1);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (4, 'pbkdf2_sha256$1000000$rowpANZ0aCMoGLpOVThWjG$hDffqt+nUz3bzYbC3SaYBNbuy68OoUjXa5sRle8ZNUM=', NULL, false, 'admin.cnx@clinic.test', 'ผู้จัดการ คลินิกสาขาเชียงใหม่', '', 'admin', true, false, '2026-08-15 00:13:43.923382+07', 2);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (5, 'pbkdf2_sha256$1000000$ozNyNH2VFgXKIPInKWKwlT$YH3cRtG+wBPkp8BRxksheC0/Up2ZBrWVGAC5p+3Sc5A=', NULL, false, 'staff.cnx@clinic.test', 'เจ้าหน้าที่ คลินิกสาขาเชียงใหม่', '', 'staff', true, false, '2026-08-15 00:13:44.295881+07', 2);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (6, 'pbkdf2_sha256$1000000$T83j76UYewTozcrwFUvDgp$rM5VD5IIOY+0xEc2i6YGeeabpOrGKrVyJaGNvvgAAyQ=', NULL, false, 'doctor.ploy@clinic.test', 'พญ. พลอย รักษาดี', '', 'doctor', true, false, '2026-08-15 00:13:44.681401+07', 1);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (7, 'pbkdf2_sha256$1000000$luRWJ0MwdOoC6rtpaOVqGI$6zlSHeNEsqvmG7YDM6d5pi8fJ879vpUvQTwauyquKLk=', NULL, false, 'doctor.non@clinic.test', 'นพ. นนท์ ผิวใส', '', 'doctor', true, false, '2026-08-15 00:13:45.126697+07', 1);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (8, 'pbkdf2_sha256$1000000$bGnxbjM90Pteiatril9g6r$MZwneevFzT+TddEreQf1k6KUVl5CC7yVt28dcbG1HzE=', NULL, false, 'doctor.mint@clinic.test', 'พญ. มิ้นท์ ใจงาม', '', 'doctor', true, false, '2026-08-15 00:13:45.543817+07', 2);
+INSERT INTO public.accounts_user (id, password, last_login, is_superuser, email, full_name, phone, role, is_active, is_staff, date_joined, clinic_id) VALUES (11, 'pbkdf2_sha256$1000000$cKgbAhU8a6gDDMGFNV6BJO$kH7XGvcfuxvstfUqIGokZgq5/fogUY+hUVWWxASSebM=', NULL, false, 'somjai@gmail.com', 'พญ.สมใจ ใจสม', '089999999', 'doctor', true, false, '2026-08-15 01:34:07.757563+07', 2);
 
 
 --
 -- Data for Name: accounts_user_groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.accounts_user_groups (id, user_id, group_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: accounts_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.accounts_user_user_permissions (id, user_id, permission_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.auth_group (id, name) FROM stdin;
-\.
 
 
 --
 -- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
-1	Can add log entry	1	add_logentry
-2	Can change log entry	1	change_logentry
-3	Can delete log entry	1	delete_logentry
-4	Can view log entry	1	view_logentry
-5	Can add permission	2	add_permission
-6	Can change permission	2	change_permission
-7	Can delete permission	2	delete_permission
-8	Can view permission	2	view_permission
-9	Can add group	3	add_group
-10	Can change group	3	change_group
-11	Can delete group	3	delete_group
-12	Can view group	3	view_group
-13	Can add content type	4	add_contenttype
-14	Can change content type	4	change_contenttype
-15	Can delete content type	4	delete_contenttype
-16	Can view content type	4	view_contenttype
-17	Can add session	5	add_session
-18	Can change session	5	change_session
-19	Can delete session	5	delete_session
-20	Can view session	5	view_session
-21	Can add Blacklisted Token	6	add_blacklistedtoken
-22	Can change Blacklisted Token	6	change_blacklistedtoken
-23	Can delete Blacklisted Token	6	delete_blacklistedtoken
-24	Can view Blacklisted Token	6	view_blacklistedtoken
-25	Can add Outstanding Token	7	add_outstandingtoken
-26	Can change Outstanding Token	7	change_outstandingtoken
-27	Can delete Outstanding Token	7	delete_outstandingtoken
-28	Can view Outstanding Token	7	view_outstandingtoken
-29	Can add ผู้ใช้งาน	8	add_user
-30	Can change ผู้ใช้งาน	8	change_user
-31	Can delete ผู้ใช้งาน	8	delete_user
-32	Can view ผู้ใช้งาน	8	view_user
-33	Can add สาขา	9	add_clinic
-34	Can change สาขา	9	change_clinic
-35	Can delete สาขา	9	delete_clinic
-36	Can view สาขา	9	view_clinic
-37	Can add แพทย์	10	add_doctor
-38	Can change แพทย์	10	change_doctor
-39	Can delete แพทย์	10	delete_doctor
-40	Can view แพทย์	10	view_doctor
-41	Can add ตารางออกตรวจ	11	add_doctorschedule
-42	Can change ตารางออกตรวจ	11	change_doctorschedule
-43	Can delete ตารางออกตรวจ	11	delete_doctorschedule
-44	Can view ตารางออกตรวจ	11	view_doctorschedule
-45	Can add ช่วงเวลาที่ถูกบล็อก	12	add_timeblock
-46	Can change ช่วงเวลาที่ถูกบล็อก	12	change_timeblock
-47	Can delete ช่วงเวลาที่ถูกบล็อก	12	delete_timeblock
-48	Can view ช่วงเวลาที่ถูกบล็อก	12	view_timeblock
-49	Can add ประเภทบริการ	13	add_servicetype
-50	Can change ประเภทบริการ	13	change_servicetype
-51	Can delete ประเภทบริการ	13	delete_servicetype
-52	Can view ประเภทบริการ	13	view_servicetype
-53	Can add การนัดหมาย	14	add_appointment
-54	Can change การนัดหมาย	14	change_appointment
-55	Can delete การนัดหมาย	14	delete_appointment
-56	Can view การนัดหมาย	14	view_appointment
-57	Can add โน้ตคนไข้	15	add_patientnote
-58	Can change โน้ตคนไข้	15	change_patientnote
-59	Can delete โน้ตคนไข้	15	delete_patientnote
-60	Can view โน้ตคนไข้	15	view_patientnote
-61	Can add คนไข้	16	add_patient
-62	Can change คนไข้	16	change_patient
-63	Can delete คนไข้	16	delete_patient
-64	Can view คนไข้	16	view_patient
-65	Can add บันทึกการส่ง SMS	17	add_smslog
-66	Can change บันทึกการส่ง SMS	17	change_smslog
-67	Can delete บันทึกการส่ง SMS	17	delete_smslog
-68	Can view บันทึกการส่ง SMS	17	view_smslog
-\.
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (1, 'Can add log entry', 1, 'add_logentry');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (2, 'Can change log entry', 1, 'change_logentry');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (3, 'Can delete log entry', 1, 'delete_logentry');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (4, 'Can view log entry', 1, 'view_logentry');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (5, 'Can add permission', 2, 'add_permission');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (6, 'Can change permission', 2, 'change_permission');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (7, 'Can delete permission', 2, 'delete_permission');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (8, 'Can view permission', 2, 'view_permission');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (9, 'Can add group', 3, 'add_group');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (10, 'Can change group', 3, 'change_group');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (11, 'Can delete group', 3, 'delete_group');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (12, 'Can view group', 3, 'view_group');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (13, 'Can add content type', 4, 'add_contenttype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (14, 'Can change content type', 4, 'change_contenttype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (15, 'Can delete content type', 4, 'delete_contenttype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (16, 'Can view content type', 4, 'view_contenttype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (17, 'Can add session', 5, 'add_session');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (18, 'Can change session', 5, 'change_session');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (19, 'Can delete session', 5, 'delete_session');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (20, 'Can view session', 5, 'view_session');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (21, 'Can add Blacklisted Token', 6, 'add_blacklistedtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (22, 'Can change Blacklisted Token', 6, 'change_blacklistedtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (23, 'Can delete Blacklisted Token', 6, 'delete_blacklistedtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (24, 'Can view Blacklisted Token', 6, 'view_blacklistedtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (25, 'Can add Outstanding Token', 7, 'add_outstandingtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (26, 'Can change Outstanding Token', 7, 'change_outstandingtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (27, 'Can delete Outstanding Token', 7, 'delete_outstandingtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (28, 'Can view Outstanding Token', 7, 'view_outstandingtoken');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (29, 'Can add ผู้ใช้งาน', 8, 'add_user');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (30, 'Can change ผู้ใช้งาน', 8, 'change_user');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (31, 'Can delete ผู้ใช้งาน', 8, 'delete_user');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (32, 'Can view ผู้ใช้งาน', 8, 'view_user');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (33, 'Can add สาขา', 9, 'add_clinic');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (34, 'Can change สาขา', 9, 'change_clinic');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (35, 'Can delete สาขา', 9, 'delete_clinic');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (36, 'Can view สาขา', 9, 'view_clinic');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (37, 'Can add แพทย์', 10, 'add_doctor');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (38, 'Can change แพทย์', 10, 'change_doctor');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (39, 'Can delete แพทย์', 10, 'delete_doctor');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (40, 'Can view แพทย์', 10, 'view_doctor');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (41, 'Can add ตารางออกตรวจ', 11, 'add_doctorschedule');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (42, 'Can change ตารางออกตรวจ', 11, 'change_doctorschedule');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (43, 'Can delete ตารางออกตรวจ', 11, 'delete_doctorschedule');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (44, 'Can view ตารางออกตรวจ', 11, 'view_doctorschedule');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (45, 'Can add ช่วงเวลาที่ถูกบล็อก', 12, 'add_timeblock');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (46, 'Can change ช่วงเวลาที่ถูกบล็อก', 12, 'change_timeblock');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (47, 'Can delete ช่วงเวลาที่ถูกบล็อก', 12, 'delete_timeblock');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (48, 'Can view ช่วงเวลาที่ถูกบล็อก', 12, 'view_timeblock');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (49, 'Can add ประเภทบริการ', 13, 'add_servicetype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (50, 'Can change ประเภทบริการ', 13, 'change_servicetype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (51, 'Can delete ประเภทบริการ', 13, 'delete_servicetype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (52, 'Can view ประเภทบริการ', 13, 'view_servicetype');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (53, 'Can add การนัดหมาย', 14, 'add_appointment');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (54, 'Can change การนัดหมาย', 14, 'change_appointment');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (55, 'Can delete การนัดหมาย', 14, 'delete_appointment');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (56, 'Can view การนัดหมาย', 14, 'view_appointment');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (57, 'Can add โน้ตคนไข้', 15, 'add_patientnote');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (58, 'Can change โน้ตคนไข้', 15, 'change_patientnote');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (59, 'Can delete โน้ตคนไข้', 15, 'delete_patientnote');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (60, 'Can view โน้ตคนไข้', 15, 'view_patientnote');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (61, 'Can add คนไข้', 16, 'add_patient');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (62, 'Can change คนไข้', 16, 'change_patient');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (63, 'Can delete คนไข้', 16, 'delete_patient');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (64, 'Can view คนไข้', 16, 'view_patient');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (65, 'Can add บันทึกการส่ง SMS', 17, 'add_smslog');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (66, 'Can change บันทึกการส่ง SMS', 17, 'change_smslog');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (67, 'Can delete บันทึกการส่ง SMS', 17, 'delete_smslog');
+INSERT INTO public.auth_permission (id, name, content_type_id, codename) VALUES (68, 'Can view บันทึกการส่ง SMS', 17, 'view_smslog');
 
 
 --
 -- Data for Name: clinics_clinic; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.clinics_clinic (id, created_at, updated_at, name, code, address, phone, opening_time, closing_time, timezone, slot_interval_minutes, non_doctor_service_capacity, sms_provider, sms_sender_name, is_active) FROM stdin;
-1	2026-08-15 00:13:42.745454+07	2026-08-15 00:13:42.745473+07	คลินิกสาขาสุขุมวิท	BKK	123 ถนนสุขุมวิท กรุงเทพฯ	021234567	09:00:00	19:00:00	Asia/Bangkok	15	1	default		t
-2	2026-08-15 00:13:42.755411+07	2026-08-15 00:13:42.755422+07	คลินิกสาขาเชียงใหม่	CNX	45 ถนนนิมมานเหมินท์ เชียงใหม่	052123456	10:00:00	18:00:00	Asia/Bangkok	15	1	default		t
-\.
+INSERT INTO public.clinics_clinic (id, created_at, updated_at, name, code, address, phone, opening_time, closing_time, timezone, slot_interval_minutes, non_doctor_service_capacity, sms_provider, sms_sender_name, is_active) VALUES (1, '2026-08-15 00:13:42.745454+07', '2026-08-15 00:13:42.745473+07', 'คลินิกสาขาสุขุมวิท', 'BKK', '123 ถนนสุขุมวิท กรุงเทพฯ', '021234567', '09:00:00', '19:00:00', 'Asia/Bangkok', 15, 1, 'default', '', true);
+INSERT INTO public.clinics_clinic (id, created_at, updated_at, name, code, address, phone, opening_time, closing_time, timezone, slot_interval_minutes, non_doctor_service_capacity, sms_provider, sms_sender_name, is_active) VALUES (2, '2026-08-15 00:13:42.755411+07', '2026-08-15 00:13:42.755422+07', 'คลินิกสาขาเชียงใหม่', 'CNX', '45 ถนนนิมมานเหมินท์ เชียงใหม่', '052123456', '10:00:00', '18:00:00', 'Asia/Bangkok', 15, 1, 'default', '', true);
 
 
 --
 -- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.django_content_type (id, app_label, model) FROM stdin;
-1	admin	logentry
-2	auth	permission
-3	auth	group
-4	contenttypes	contenttype
-5	sessions	session
-6	token_blacklist	blacklistedtoken
-7	token_blacklist	outstandingtoken
-8	accounts	user
-9	clinics	clinic
-10	doctors	doctor
-11	doctors	doctorschedule
-12	doctors	timeblock
-13	services	servicetype
-14	scheduling	appointment
-15	patients	patientnote
-16	patients	patient
-17	notifications	smslog
-\.
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (1, 'admin', 'logentry');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (2, 'auth', 'permission');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (3, 'auth', 'group');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (4, 'contenttypes', 'contenttype');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (5, 'sessions', 'session');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (6, 'token_blacklist', 'blacklistedtoken');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (7, 'token_blacklist', 'outstandingtoken');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (8, 'accounts', 'user');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (9, 'clinics', 'clinic');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (10, 'doctors', 'doctor');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (11, 'doctors', 'doctorschedule');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (12, 'doctors', 'timeblock');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (13, 'services', 'servicetype');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (14, 'scheduling', 'appointment');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (15, 'patients', 'patientnote');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (16, 'patients', 'patient');
+INSERT INTO public.django_content_type (id, app_label, model) VALUES (17, 'notifications', 'smslog');
 
 
 --
 -- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.django_migrations (id, app, name, applied) FROM stdin;
-1	clinics	0001_initial	2026-08-13 22:06:20.763402+07
-2	contenttypes	0001_initial	2026-08-13 22:06:20.773031+07
-3	contenttypes	0002_remove_content_type_name	2026-08-13 22:06:20.78087+07
-4	auth	0001_initial	2026-08-13 22:06:20.818786+07
-5	auth	0002_alter_permission_name_max_length	2026-08-13 22:06:20.823853+07
-6	auth	0003_alter_user_email_max_length	2026-08-13 22:06:20.827426+07
-7	auth	0004_alter_user_username_opts	2026-08-13 22:06:20.831831+07
-8	auth	0005_alter_user_last_login_null	2026-08-13 22:06:20.835656+07
-9	auth	0006_require_contenttypes_0002	2026-08-13 22:06:20.836689+07
-10	auth	0007_alter_validators_add_error_messages	2026-08-13 22:06:20.839374+07
-11	auth	0008_alter_user_username_max_length	2026-08-13 22:06:20.842678+07
-12	auth	0009_alter_user_last_name_max_length	2026-08-13 22:06:20.848516+07
-13	auth	0010_alter_group_name_max_length	2026-08-13 22:06:20.855884+07
-14	auth	0011_update_proxy_permissions	2026-08-13 22:06:20.860863+07
-15	auth	0012_alter_user_first_name_max_length	2026-08-13 22:06:20.866137+07
-16	accounts	0001_initial	2026-08-13 22:06:20.912685+07
-17	admin	0001_initial	2026-08-13 22:06:20.928557+07
-18	admin	0002_logentry_remove_auto_add	2026-08-13 22:06:20.934791+07
-19	admin	0003_logentry_add_action_flag_choices	2026-08-13 22:06:20.940262+07
-20	doctors	0001_initial	2026-08-13 22:06:21.027359+07
-21	services	0001_initial	2026-08-13 22:06:21.040674+07
-22	patients	0001_initial	2026-08-13 22:06:21.067902+07
-23	scheduling	0001_initial	2026-08-13 22:06:21.105376+07
-24	notifications	0001_initial	2026-08-13 22:06:21.115037+07
-25	notifications	0002_initial	2026-08-13 22:06:21.165+07
-26	patients	0002_initial	2026-08-13 22:06:21.273035+07
-27	patients	0003_patient_search_indexes	2026-08-13 22:06:21.387164+07
-28	scheduling	0002_appointment_overlap_exclusion	2026-08-13 22:06:21.533012+07
-29	sessions	0001_initial	2026-08-13 22:06:21.547289+07
-30	token_blacklist	0001_initial	2026-08-13 22:06:21.584605+07
-31	token_blacklist	0002_outstandingtoken_jti_hex	2026-08-13 22:06:21.593016+07
-32	token_blacklist	0003_auto_20171017_2007	2026-08-13 22:06:21.613628+07
-33	token_blacklist	0004_auto_20171017_2013	2026-08-13 22:06:21.626235+07
-34	token_blacklist	0005_remove_outstandingtoken_jti	2026-08-13 22:06:21.637192+07
-35	token_blacklist	0006_auto_20171017_2113	2026-08-13 22:06:21.649697+07
-36	token_blacklist	0007_auto_20171017_2214	2026-08-13 22:06:21.682393+07
-37	token_blacklist	0008_migrate_to_bigautofield	2026-08-13 22:06:21.721787+07
-38	token_blacklist	0010_fix_migrate_to_bigautofield	2026-08-13 22:06:21.744847+07
-39	token_blacklist	0011_linearizes_history	2026-08-13 22:06:21.746396+07
-40	token_blacklist	0012_alter_outstandingtoken_user	2026-08-13 22:06:21.758296+07
-41	token_blacklist	0013_alter_blacklistedtoken_options_and_more	2026-08-13 22:06:21.76964+07
-\.
-
-
---
--- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
-\.
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (1, 'clinics', '0001_initial', '2026-08-13 22:06:20.763402+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (2, 'contenttypes', '0001_initial', '2026-08-13 22:06:20.773031+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (3, 'contenttypes', '0002_remove_content_type_name', '2026-08-13 22:06:20.78087+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (4, 'auth', '0001_initial', '2026-08-13 22:06:20.818786+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (5, 'auth', '0002_alter_permission_name_max_length', '2026-08-13 22:06:20.823853+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (6, 'auth', '0003_alter_user_email_max_length', '2026-08-13 22:06:20.827426+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (7, 'auth', '0004_alter_user_username_opts', '2026-08-13 22:06:20.831831+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (8, 'auth', '0005_alter_user_last_login_null', '2026-08-13 22:06:20.835656+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (9, 'auth', '0006_require_contenttypes_0002', '2026-08-13 22:06:20.836689+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (10, 'auth', '0007_alter_validators_add_error_messages', '2026-08-13 22:06:20.839374+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (11, 'auth', '0008_alter_user_username_max_length', '2026-08-13 22:06:20.842678+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (12, 'auth', '0009_alter_user_last_name_max_length', '2026-08-13 22:06:20.848516+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (13, 'auth', '0010_alter_group_name_max_length', '2026-08-13 22:06:20.855884+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (14, 'auth', '0011_update_proxy_permissions', '2026-08-13 22:06:20.860863+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (15, 'auth', '0012_alter_user_first_name_max_length', '2026-08-13 22:06:20.866137+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (16, 'accounts', '0001_initial', '2026-08-13 22:06:20.912685+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (17, 'admin', '0001_initial', '2026-08-13 22:06:20.928557+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (18, 'admin', '0002_logentry_remove_auto_add', '2026-08-13 22:06:20.934791+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (19, 'admin', '0003_logentry_add_action_flag_choices', '2026-08-13 22:06:20.940262+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (20, 'doctors', '0001_initial', '2026-08-13 22:06:21.027359+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (21, 'services', '0001_initial', '2026-08-13 22:06:21.040674+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (22, 'patients', '0001_initial', '2026-08-13 22:06:21.067902+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (23, 'scheduling', '0001_initial', '2026-08-13 22:06:21.105376+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (24, 'notifications', '0001_initial', '2026-08-13 22:06:21.115037+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (25, 'notifications', '0002_initial', '2026-08-13 22:06:21.165+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (26, 'patients', '0002_initial', '2026-08-13 22:06:21.273035+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (27, 'patients', '0003_patient_search_indexes', '2026-08-13 22:06:21.387164+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (28, 'scheduling', '0002_appointment_overlap_exclusion', '2026-08-13 22:06:21.533012+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (29, 'sessions', '0001_initial', '2026-08-13 22:06:21.547289+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (30, 'token_blacklist', '0001_initial', '2026-08-13 22:06:21.584605+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (31, 'token_blacklist', '0002_outstandingtoken_jti_hex', '2026-08-13 22:06:21.593016+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (32, 'token_blacklist', '0003_auto_20171017_2007', '2026-08-13 22:06:21.613628+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (33, 'token_blacklist', '0004_auto_20171017_2013', '2026-08-13 22:06:21.626235+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (34, 'token_blacklist', '0005_remove_outstandingtoken_jti', '2026-08-13 22:06:21.637192+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (35, 'token_blacklist', '0006_auto_20171017_2113', '2026-08-13 22:06:21.649697+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (36, 'token_blacklist', '0007_auto_20171017_2214', '2026-08-13 22:06:21.682393+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (37, 'token_blacklist', '0008_migrate_to_bigautofield', '2026-08-13 22:06:21.721787+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (38, 'token_blacklist', '0010_fix_migrate_to_bigautofield', '2026-08-13 22:06:21.744847+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (39, 'token_blacklist', '0011_linearizes_history', '2026-08-13 22:06:21.746396+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (40, 'token_blacklist', '0012_alter_outstandingtoken_user', '2026-08-13 22:06:21.758296+07');
+INSERT INTO public.django_migrations (id, app, name, applied) VALUES (41, 'token_blacklist', '0013_alter_blacklistedtoken_options_and_more', '2026-08-13 22:06:21.76964+07');
 
 
 --
 -- Data for Name: doctors_doctor; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.doctors_doctor (id, created_at, updated_at, display_name, specialties, color, is_active, clinic_id, user_id) FROM stdin;
-1	2026-08-15 00:13:45.063765+07	2026-08-15 00:13:45.063776+07	พญ. พลอย รักษาดี	ผิวหนังและความงาม	#2563eb	t	1	6
-2	2026-08-15 00:13:45.52706+07	2026-08-15 00:13:45.527071+07	นพ. นนท์ ผิวใส	ผิวหนังและความงาม	#16a34a	t	1	7
-3	2026-08-15 00:13:46.074861+07	2026-08-15 00:13:46.074876+07	พญ. มิ้นท์ ใจงาม	ผิวหนังและความงาม	#db2777	t	2	8
-6	2026-08-15 01:34:08.142124+07	2026-08-15 01:34:08.142134+07	พญ.สมใจ	ผิวหนัง	#0891b2	t	2	11
-\.
+INSERT INTO public.doctors_doctor (id, created_at, updated_at, display_name, specialties, color, is_active, clinic_id, user_id) VALUES (1, '2026-08-15 00:13:45.063765+07', '2026-08-15 00:13:45.063776+07', 'พญ. พลอย รักษาดี', 'ผิวหนังและความงาม', '#2563eb', true, 1, 6);
+INSERT INTO public.doctors_doctor (id, created_at, updated_at, display_name, specialties, color, is_active, clinic_id, user_id) VALUES (2, '2026-08-15 00:13:45.52706+07', '2026-08-15 00:13:45.527071+07', 'นพ. นนท์ ผิวใส', 'ผิวหนังและความงาม', '#16a34a', true, 1, 7);
+INSERT INTO public.doctors_doctor (id, created_at, updated_at, display_name, specialties, color, is_active, clinic_id, user_id) VALUES (3, '2026-08-15 00:13:46.074861+07', '2026-08-15 00:13:46.074876+07', 'พญ. มิ้นท์ ใจงาม', 'ผิวหนังและความงาม', '#db2777', true, 2, 8);
+INSERT INTO public.doctors_doctor (id, created_at, updated_at, display_name, specialties, color, is_active, clinic_id, user_id) VALUES (6, '2026-08-15 01:34:08.142124+07', '2026-08-15 01:34:08.142134+07', 'พญ.สมใจ', 'ผิวหนัง', '#0891b2', true, 2, 11);
 
 
 --
 -- Data for Name: doctors_doctorschedule; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) FROM stdin;
-1	2026-08-15 00:13:45.077942+07	2026-08-15 00:13:45.077953+07	0	09:00:00	12:00:00	t	1	1
-2	2026-08-15 00:13:45.083488+07	2026-08-15 00:13:45.083497+07	0	13:00:00	17:00:00	t	1	1
-3	2026-08-15 00:13:45.084979+07	2026-08-15 00:13:45.084988+07	1	09:00:00	12:00:00	t	1	1
-4	2026-08-15 00:13:45.088168+07	2026-08-15 00:13:45.088182+07	1	13:00:00	17:00:00	t	1	1
-5	2026-08-15 00:13:45.090143+07	2026-08-15 00:13:45.090152+07	2	09:00:00	12:00:00	t	1	1
-6	2026-08-15 00:13:45.091901+07	2026-08-15 00:13:45.091913+07	2	13:00:00	17:00:00	t	1	1
-7	2026-08-15 00:13:45.095938+07	2026-08-15 00:13:45.095948+07	3	09:00:00	12:00:00	t	1	1
-8	2026-08-15 00:13:45.097403+07	2026-08-15 00:13:45.097411+07	3	13:00:00	17:00:00	t	1	1
-9	2026-08-15 00:13:45.098726+07	2026-08-15 00:13:45.098733+07	4	09:00:00	12:00:00	t	1	1
-10	2026-08-15 00:13:45.101553+07	2026-08-15 00:13:45.101565+07	4	13:00:00	17:00:00	t	1	1
-11	2026-08-15 00:13:45.528562+07	2026-08-15 00:13:45.52857+07	0	09:00:00	12:00:00	t	1	2
-12	2026-08-15 00:13:45.530686+07	2026-08-15 00:13:45.530743+07	0	13:00:00	17:00:00	t	1	2
-13	2026-08-15 00:13:45.532916+07	2026-08-15 00:13:45.532925+07	2	09:00:00	12:00:00	t	1	2
-14	2026-08-15 00:13:45.534343+07	2026-08-15 00:13:45.534351+07	2	13:00:00	17:00:00	t	1	2
-15	2026-08-15 00:13:45.535645+07	2026-08-15 00:13:45.535651+07	4	09:00:00	12:00:00	t	1	2
-16	2026-08-15 00:13:45.536836+07	2026-08-15 00:13:45.536842+07	4	13:00:00	17:00:00	t	1	2
-17	2026-08-15 00:13:45.540105+07	2026-08-15 00:13:45.540114+07	5	09:00:00	12:00:00	t	1	2
-18	2026-08-15 00:13:45.541365+07	2026-08-15 00:13:45.541372+07	5	13:00:00	17:00:00	t	1	2
-19	2026-08-15 00:13:46.07778+07	2026-08-15 00:13:46.077794+07	1	09:00:00	12:00:00	t	2	3
-20	2026-08-15 00:13:46.080469+07	2026-08-15 00:13:46.080482+07	1	13:00:00	17:00:00	t	2	3
-21	2026-08-15 00:13:46.082369+07	2026-08-15 00:13:46.08238+07	2	09:00:00	12:00:00	t	2	3
-22	2026-08-15 00:13:46.084437+07	2026-08-15 00:13:46.084447+07	2	13:00:00	17:00:00	t	2	3
-23	2026-08-15 00:13:46.086554+07	2026-08-15 00:13:46.086564+07	3	09:00:00	12:00:00	t	2	3
-24	2026-08-15 00:13:46.087963+07	2026-08-15 00:13:46.087972+07	3	13:00:00	17:00:00	t	2	3
-25	2026-08-15 00:13:46.089443+07	2026-08-15 00:13:46.089452+07	4	09:00:00	12:00:00	t	2	3
-26	2026-08-15 00:13:46.091276+07	2026-08-15 00:13:46.091287+07	4	13:00:00	17:00:00	t	2	3
-27	2026-08-15 00:13:46.093593+07	2026-08-15 00:13:46.093605+07	5	09:00:00	12:00:00	t	2	3
-28	2026-08-15 00:13:46.095152+07	2026-08-15 00:13:46.095162+07	5	13:00:00	17:00:00	t	2	3
-\.
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (1, '2026-08-15 00:13:45.077942+07', '2026-08-15 00:13:45.077953+07', 0, '09:00:00', '12:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (2, '2026-08-15 00:13:45.083488+07', '2026-08-15 00:13:45.083497+07', 0, '13:00:00', '17:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (3, '2026-08-15 00:13:45.084979+07', '2026-08-15 00:13:45.084988+07', 1, '09:00:00', '12:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (4, '2026-08-15 00:13:45.088168+07', '2026-08-15 00:13:45.088182+07', 1, '13:00:00', '17:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (5, '2026-08-15 00:13:45.090143+07', '2026-08-15 00:13:45.090152+07', 2, '09:00:00', '12:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (6, '2026-08-15 00:13:45.091901+07', '2026-08-15 00:13:45.091913+07', 2, '13:00:00', '17:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (7, '2026-08-15 00:13:45.095938+07', '2026-08-15 00:13:45.095948+07', 3, '09:00:00', '12:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (8, '2026-08-15 00:13:45.097403+07', '2026-08-15 00:13:45.097411+07', 3, '13:00:00', '17:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (9, '2026-08-15 00:13:45.098726+07', '2026-08-15 00:13:45.098733+07', 4, '09:00:00', '12:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (10, '2026-08-15 00:13:45.101553+07', '2026-08-15 00:13:45.101565+07', 4, '13:00:00', '17:00:00', true, 1, 1);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (11, '2026-08-15 00:13:45.528562+07', '2026-08-15 00:13:45.52857+07', 0, '09:00:00', '12:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (12, '2026-08-15 00:13:45.530686+07', '2026-08-15 00:13:45.530743+07', 0, '13:00:00', '17:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (13, '2026-08-15 00:13:45.532916+07', '2026-08-15 00:13:45.532925+07', 2, '09:00:00', '12:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (14, '2026-08-15 00:13:45.534343+07', '2026-08-15 00:13:45.534351+07', 2, '13:00:00', '17:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (15, '2026-08-15 00:13:45.535645+07', '2026-08-15 00:13:45.535651+07', 4, '09:00:00', '12:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (16, '2026-08-15 00:13:45.536836+07', '2026-08-15 00:13:45.536842+07', 4, '13:00:00', '17:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (17, '2026-08-15 00:13:45.540105+07', '2026-08-15 00:13:45.540114+07', 5, '09:00:00', '12:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (18, '2026-08-15 00:13:45.541365+07', '2026-08-15 00:13:45.541372+07', 5, '13:00:00', '17:00:00', true, 1, 2);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (19, '2026-08-15 00:13:46.07778+07', '2026-08-15 00:13:46.077794+07', 1, '09:00:00', '12:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (20, '2026-08-15 00:13:46.080469+07', '2026-08-15 00:13:46.080482+07', 1, '13:00:00', '17:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (21, '2026-08-15 00:13:46.082369+07', '2026-08-15 00:13:46.08238+07', 2, '09:00:00', '12:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (22, '2026-08-15 00:13:46.084437+07', '2026-08-15 00:13:46.084447+07', 2, '13:00:00', '17:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (23, '2026-08-15 00:13:46.086554+07', '2026-08-15 00:13:46.086564+07', 3, '09:00:00', '12:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (24, '2026-08-15 00:13:46.087963+07', '2026-08-15 00:13:46.087972+07', 3, '13:00:00', '17:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (25, '2026-08-15 00:13:46.089443+07', '2026-08-15 00:13:46.089452+07', 4, '09:00:00', '12:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (26, '2026-08-15 00:13:46.091276+07', '2026-08-15 00:13:46.091287+07', 4, '13:00:00', '17:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (27, '2026-08-15 00:13:46.093593+07', '2026-08-15 00:13:46.093605+07', 5, '09:00:00', '12:00:00', true, 2, 3);
+INSERT INTO public.doctors_doctorschedule (id, created_at, updated_at, day_of_week, start_time, end_time, is_active, clinic_id, doctor_id) VALUES (28, '2026-08-15 00:13:46.095152+07', '2026-08-15 00:13:46.095162+07', 5, '13:00:00', '17:00:00', true, 2, 3);
 
 
 --
 -- Data for Name: doctors_timeblock; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.doctors_timeblock (id, created_at, updated_at, start_datetime, end_datetime, reason, note, is_recurring, recurrence, recurrence_end_date, clinic_id, doctor_id) FROM stdin;
-1	2026-08-15 00:13:45.12373+07	2026-08-15 00:13:45.123741+07	2026-08-15 12:00:00+07	2026-08-15 13:00:00+07	lunch	พักเที่ยงประจำวัน	t	daily	\N	1	1
-2	2026-08-15 00:13:45.542552+07	2026-08-15 00:13:45.542559+07	2026-08-15 12:00:00+07	2026-08-15 13:00:00+07	lunch	พักเที่ยงประจำวัน	t	daily	\N	1	2
-3	2026-08-15 00:13:46.096342+07	2026-08-15 00:13:46.096349+07	2026-08-15 12:00:00+07	2026-08-15 13:00:00+07	lunch	พักเที่ยงประจำวัน	t	daily	\N	2	3
-\.
+INSERT INTO public.doctors_timeblock (id, created_at, updated_at, start_datetime, end_datetime, reason, note, is_recurring, recurrence, recurrence_end_date, clinic_id, doctor_id) VALUES (1, '2026-08-15 00:13:45.12373+07', '2026-08-15 00:13:45.123741+07', '2026-08-15 12:00:00+07', '2026-08-15 13:00:00+07', 'lunch', 'พักเที่ยงประจำวัน', true, 'daily', NULL, 1, 1);
+INSERT INTO public.doctors_timeblock (id, created_at, updated_at, start_datetime, end_datetime, reason, note, is_recurring, recurrence, recurrence_end_date, clinic_id, doctor_id) VALUES (2, '2026-08-15 00:13:45.542552+07', '2026-08-15 00:13:45.542559+07', '2026-08-15 12:00:00+07', '2026-08-15 13:00:00+07', 'lunch', 'พักเที่ยงประจำวัน', true, 'daily', NULL, 1, 2);
+INSERT INTO public.doctors_timeblock (id, created_at, updated_at, start_datetime, end_datetime, reason, note, is_recurring, recurrence, recurrence_end_date, clinic_id, doctor_id) VALUES (3, '2026-08-15 00:13:46.096342+07', '2026-08-15 00:13:46.096349+07', '2026-08-15 12:00:00+07', '2026-08-15 13:00:00+07', 'lunch', 'พักเที่ยงประจำวัน', true, 'daily', NULL, 2, 3);
 
 
 --
 -- Data for Name: notifications_smslog; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.notifications_smslog (id, created_at, updated_at, kind, message, status, provider, provider_message_id, error_message, sent_at, appointment_id, clinic_id, patient_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: patients_patient; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) FROM stdin;
-1	2026-08-15 00:13:46.152122+07	2026-08-15 00:13:46.152134+07	BKK-000001	สมหญิง	ใจดี	0811111111	\N	unspecified	t	\N	1
-2	2026-08-15 00:13:46.160553+07	2026-08-15 00:13:46.160563+07	BKK-000002	สมชาย	รักสุขภาพ	0822222222	\N	unspecified	t	\N	1
-3	2026-08-15 00:13:46.165096+07	2026-08-15 00:13:46.165111+07	BKK-000003	ปรียา	แสงทอง	0833333333	\N	unspecified	t	\N	1
-4	2026-08-15 00:13:46.170556+07	2026-08-15 00:13:46.170566+07	BKK-000004	วิชัย	มั่นคง	0844444444	\N	unspecified	t	\N	1
-5	2026-08-15 00:19:33.258299+07	2026-08-15 00:19:33.25831+07	BKK-000005	พงศภัค	หลักไชย	0994622397	2002-01-30	male	t	3	1
-\.
+INSERT INTO public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) VALUES (1, '2026-08-15 00:13:46.152122+07', '2026-08-15 00:13:46.152134+07', 'BKK-000001', 'สมหญิง', 'ใจดี', '0811111111', NULL, 'unspecified', true, NULL, 1);
+INSERT INTO public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) VALUES (2, '2026-08-15 00:13:46.160553+07', '2026-08-15 00:13:46.160563+07', 'BKK-000002', 'สมชาย', 'รักสุขภาพ', '0822222222', NULL, 'unspecified', true, NULL, 1);
+INSERT INTO public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) VALUES (3, '2026-08-15 00:13:46.165096+07', '2026-08-15 00:13:46.165111+07', 'BKK-000003', 'ปรียา', 'แสงทอง', '0833333333', NULL, 'unspecified', true, NULL, 1);
+INSERT INTO public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) VALUES (4, '2026-08-15 00:13:46.170556+07', '2026-08-15 00:13:46.170566+07', 'BKK-000004', 'วิชัย', 'มั่นคง', '0844444444', NULL, 'unspecified', true, NULL, 1);
+INSERT INTO public.patients_patient (id, created_at, updated_at, patient_code, first_name, last_name, phone, date_of_birth, gender, is_active, created_by_id, home_clinic_id) VALUES (5, '2026-08-15 00:19:33.258299+07', '2026-08-15 00:19:33.25831+07', 'BKK-000005', 'พงศภัค', 'หลักไชย', '0994622397', '2002-01-30', 'male', true, 3, 1);
 
 
 --
 -- Data for Name: patients_patientnote; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.patients_patientnote (id, created_at, updated_at, note_text, is_pinned, appointment_id, created_by_id, patient_id) FROM stdin;
-\.
 
 
 --
 -- Data for Name: scheduling_appointment; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) FROM stdin;
-1	2026-08-15 00:20:04.346597+07	2026-08-15 00:20:21.567728+07	2026-08-15 09:15:00+07	2026-08-15 10:15:00+07	no_show	staff_created		\N	\N	\N		1	3	2	5	3
-5	2026-08-15 00:27:58.968829+07	2026-08-15 00:27:58.968838+07	2026-08-17 09:00:00+07	2026-08-17 09:30:00+07	booked	staff_created		\N	\N	\N		1	\N	1	1	1
-6	2026-08-15 00:27:58.97862+07	2026-08-15 00:27:58.978627+07	2026-08-17 10:00:00+07	2026-08-17 10:30:00+07	booked	staff_created		\N	\N	\N		1	\N	1	2	1
-7	2026-08-15 00:27:58.986603+07	2026-08-15 00:27:58.986613+07	2026-08-17 11:00:00+07	2026-08-17 11:30:00+07	booked	staff_created		\N	\N	\N		1	\N	1	3	1
-8	2026-08-15 00:27:58.994916+07	2026-08-15 00:27:58.994925+07	2026-08-17 13:15:00+07	2026-08-17 13:45:00+07	booked	staff_created		\N	\N	\N		1	\N	1	4	1
-\.
+INSERT INTO public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) VALUES (1, '2026-08-15 00:20:04.346597+07', '2026-08-15 00:20:21.567728+07', '2026-08-15 09:15:00+07', '2026-08-15 10:15:00+07', 'no_show', 'staff_created', '', NULL, NULL, NULL, '', 1, 3, 2, 5, 3);
+INSERT INTO public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) VALUES (5, '2026-08-15 00:27:58.968829+07', '2026-08-15 00:27:58.968838+07', '2026-08-17 09:00:00+07', '2026-08-17 09:30:00+07', 'booked', 'staff_created', '', NULL, NULL, NULL, '', 1, NULL, 1, 1, 1);
+INSERT INTO public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) VALUES (6, '2026-08-15 00:27:58.97862+07', '2026-08-15 00:27:58.978627+07', '2026-08-17 10:00:00+07', '2026-08-17 10:30:00+07', 'booked', 'staff_created', '', NULL, NULL, NULL, '', 1, NULL, 1, 2, 1);
+INSERT INTO public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) VALUES (7, '2026-08-15 00:27:58.986603+07', '2026-08-15 00:27:58.986613+07', '2026-08-17 11:00:00+07', '2026-08-17 11:30:00+07', 'booked', 'staff_created', '', NULL, NULL, NULL, '', 1, NULL, 1, 3, 1);
+INSERT INTO public.scheduling_appointment (id, created_at, updated_at, scheduled_start, scheduled_end, status, source, note, checked_in_at, started_at, completed_at, cancelled_reason, clinic_id, created_by_id, doctor_id, patient_id, service_type_id) VALUES (8, '2026-08-15 00:27:58.994916+07', '2026-08-15 00:27:58.994925+07', '2026-08-17 13:15:00+07', '2026-08-17 13:45:00+07', 'booked', 'staff_created', '', NULL, NULL, NULL, '', 1, NULL, 1, 4, 1);
 
 
 --
 -- Data for Name: services_servicetype; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) FROM stdin;
-1	2026-08-15 00:13:42.764181+07	2026-08-15 00:13:42.764192+07	ฉีดโบลดริ้วรอย	ฉีด		30	8500.00	t	t
-2	2026-08-15 00:13:42.769746+07	2026-08-15 00:13:42.769756+07	ฟิลเลอร์ร่องแก้ม	ฉีด		45	12000.00	t	t
-3	2026-08-15 00:13:42.770689+07	2026-08-15 00:13:42.770696+07	เลเซอร์หน้าใส	เลเซอร์		60	3500.00	t	t
-4	2026-08-15 00:13:42.771429+07	2026-08-15 00:13:42.771435+07	ปรึกษาแพทย์	ปรึกษา		15	500.00	t	t
-5	2026-08-15 00:13:42.772128+07	2026-08-15 00:13:42.772133+07	ดริปวิตามินผิว	ดริป		60	2500.00	f	t
-\.
-
-
---
--- Data for Name: token_blacklist_blacklistedtoken; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.token_blacklist_blacklistedtoken (id, blacklisted_at, token_id) FROM stdin;
-1	2026-08-15 00:20:42.778991+07	1
-2	2026-08-15 00:22:38.891051+07	2
-3	2026-08-15 00:23:54.537612+07	3
-4	2026-08-15 00:39:57.258588+07	4
-5	2026-08-15 00:54:57.269944+07	6
-6	2026-08-15 00:58:05.482426+07	7
-7	2026-08-15 01:26:41.47406+07	9
-8	2026-08-15 01:32:25.281325+07	10
-10	2026-08-15 01:34:56.931112+07	15
-11	2026-08-15 01:35:30.672751+07	16
-12	2026-08-17 00:35:59.520165+07	17
-\.
-
-
---
--- Data for Name: token_blacklist_outstandingtoken; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.token_blacklist_outstandingtoken (id, token, created_at, expires_at, user_id, jti) FROM stdin;
-1	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMjY5OCwiaWF0IjoxNzg2NzI3ODk4LCJqdGkiOiIzNmJlMzhjMjg5Mjc0YWU0YTE0MjA4MDE4MzYwMWJmZSIsInVzZXJfaWQiOiIzIn0.xfBzlbNMQlhsoHXh9mgZhOAQrJt2pctDOPN02xZmShY	2026-08-15 00:18:18.679131+07	2026-08-22 00:18:18+07	3	36be38c289274ae4a142080183601bfe
-2	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMjg2NywiaWF0IjoxNzg2NzI4MDY3LCJqdGkiOiI2NTkxNmNjMDNlMzM0NThlOGIxMTQzM2YzNzZmNjgyMSIsInVzZXJfaWQiOiIxIn0.ro8wxhEcKedzPEedL4G_SuVSGQ6zn9FDIJ3xMOl7y0M	2026-08-15 00:21:07.234945+07	2026-08-22 00:21:07+07	1	65916cc03e33458e8b11433f376f6821
-3	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMzAxMiwiaWF0IjoxNzg2NzI4MjEyLCJqdGkiOiJlYzhiYTQ5YTMyZmM0MGIxOTMxMTBkYmIyMzQ0OGM4MyIsInVzZXJfaWQiOiIyIn0.Lx6h3Q15qgvLH8htr1WI4jqWGUmwABd87TXOiRdtnY8	2026-08-15 00:23:32.63342+07	2026-08-22 00:23:32+07	2	ec8ba49a32fc40b193110dbb23448c83
-4	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMzAzOSwiaWF0IjoxNzg2NzI4MjM5LCJqdGkiOiIyNzljMDg0YWZjZDc0MTRmYWZhYjM1MDM3NmZlNmEzMyIsInVzZXJfaWQiOiI2In0.F2qyBd03XBC4Tw5-LAcZnWN1dl7NnUi-THLjlI5_GLM	2026-08-15 00:23:59.672389+07	2026-08-22 00:23:59+07	6	279c084afcd7414fafab350376fe6a33
-5	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMzY1OSwiaWF0IjoxNzg2NzI4ODU5LCJqdGkiOiI0NGM2ZGNhMjhkNmM0OThiYjdiMWYwYjhhNDY5MTIxMiIsInVzZXJfaWQiOiIxIn0.QdexnkrGgEmGaXkyStRMfUbQWYtSO2w6o4n6MGRlBxQ	2026-08-15 00:34:19.896481+07	2026-08-22 00:34:19+07	1	44c6dca28d6c498bb7b1f0b8a4691212
-6	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzMzk5NywiaWF0IjoxNzg2NzI5MTk3LCJqdGkiOiIzZTRkNmFjNmZhZDE0ODc0YTIxOGI3ODhiOWUwMGRkMCIsInVzZXJfaWQiOiI2In0.pG7bfRTH3nGpm5p9obD9RBZRmYZjlw-koJPmUlXKGyQ	2026-08-15 00:39:57.260149+07	2026-08-22 00:39:57+07	6	3e4d6ac6fad14874a218b788b9e00dd0
-7	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNDg5NywiaWF0IjoxNzg2NzMwMDk3LCJqdGkiOiJkYTVhZDllNDNkYjM0MmZmOTFjZjEyMzU2YmRmMWEzMCIsInVzZXJfaWQiOiI2In0.1qm6dIRL_kZuCLJqgRazwGMTylHoIlm3_GitBHKZZoM	2026-08-15 00:54:57.272251+07	2026-08-22 00:54:57+07	6	da5ad9e43db342ff91cf12356bdf1a30
-8	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNTQwNSwiaWF0IjoxNzg2NzMwNjA1LCJqdGkiOiJjZGU0NjQ2NzQ3ZTQ0YzVmODgyYzVmYjMzYjI1ZmY3MCIsInVzZXJfaWQiOiIxIn0.uZ35zrWJ01e7tc9gphou-dPfXyZZoYPHjulTZHF7L0Y	2026-08-15 01:03:25.921775+07	2026-08-22 01:03:25+07	1	cde4646747e44c5f882c5fb33b25ff70
-9	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNTU1OCwiaWF0IjoxNzg2NzMwNzU4LCJqdGkiOiIyYmMxZDNhNTFiODA0MjMwYmFmODIzZmFhNzEzODcyZSIsInVzZXJfaWQiOiIxIn0.Y4fg56Q9cI9R1K3Or3IjKUfd5xXiKPqWbNfGfUl-rto	2026-08-15 01:05:58.35517+07	2026-08-22 01:05:58+07	1	2bc1d3a51b804230baf823faa713872e
-10	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNjA1OCwiaWF0IjoxNzg2NzMxMjU4LCJqdGkiOiIzNmVlZTE3NzgzZGI0NmVhOThlMTI5MzFiYzI5ODY2YyIsInVzZXJfaWQiOiIxIn0.9YDnInI7m69y1beiBaWqxd0fbsApCicc32PWEPmq_ks	2026-08-15 01:14:18.608004+07	2026-08-22 01:14:18+07	1	36eee17783db46ea98e12931bc29866c
-11	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNjgwMSwiaWF0IjoxNzg2NzMyMDAxLCJqdGkiOiI1NDk1NTE2N2E0Mjc0NDRkOTk2ZmZmMTkwNDg4ZmI4NiIsInVzZXJfaWQiOiIxIn0.4SdflptkHG9ZFWfxzUVWFxmvp4-2PhS2FFoZfl88Z9Y	2026-08-15 01:26:41.481889+07	2026-08-22 01:26:41+07	1	54955167a427444d996fff190488fb86
-12	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNjgxMiwiaWF0IjoxNzg2NzMyMDEyLCJqdGkiOiI5YmZjNmM5ZThlYmU0YmZiYTU0ZDQwYWYxYmZkYTBiZiIsInVzZXJfaWQiOiIyIn0.p81wHEDcgy-qVIEOite9gdpEEzv6UdMp7HANlSD78jE	2026-08-15 01:26:52.107646+07	2026-08-22 01:26:52+07	2	9bfc6c9e8ebe4bfba54d40af1bfda0bf
-13	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNzE0NSwiaWF0IjoxNzg2NzMyMzQ1LCJqdGkiOiI4YmQ1NGUyNDlmMDI0ZjEzOWUyZTVmNmE3ODY4NjQ3NCIsInVzZXJfaWQiOiIxIn0.8HBfSgVWzN4zGG9TGhyqFSWk3P0PYiPX4GDRLdZlN50	2026-08-15 01:32:25.28412+07	2026-08-22 01:32:25+07	1	8bd54e249f024f139e2e5f6a78686474
-14	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNzE0NSwiaWF0IjoxNzg2NzMyMzQ1LCJqdGkiOiIyMDliYzI0MjQwMTI0NTMxOWY4MjhiMzVhOGUyNjAwNiIsInVzZXJfaWQiOiIxIn0.M_oD3Ah6nKEpGJZK6tRfMHCmbdISHyIErErggCEvoLw	2026-08-15 01:32:25.287867+07	2026-08-22 01:32:25+07	1	209bc242401245319f828b35a8e26006
-15	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNzE3MSwiaWF0IjoxNzg2NzMyMzcxLCJqdGkiOiI4YjZmOTQzNTk4NDc0NjI0OGQ3YzMzYzdkOWM4M2ZjZiIsInVzZXJfaWQiOiIxIn0.CZZYwNfUz1wu7OLPy_Z33mDyzcJwE2ohpd8Vs6u0zlY	2026-08-15 01:32:51.380101+07	2026-08-22 01:32:51+07	1	8b6f9435984746248d7c33c7d9c83fcf
-16	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzMzNzMwNywiaWF0IjoxNzg2NzMyNTA3LCJqdGkiOiIyM2VlODRkYmM4OWQ0OWU2OWI1NmEwODIzYmY0YjNlMCIsInVzZXJfaWQiOiIxMSJ9.Zm6cTkN4gLl_1AcgNgX3j5nTT8lEpiBQR8kKdNrC75M	2026-08-15 01:35:07.017721+07	2026-08-22 01:35:07+07	11	23ee84dbc89d49e69b56a0823bf4b3e0
-17	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTA3NSwiaWF0IjoxNzg2OTAwMjc1LCJqdGkiOiJhZTNiNTM3NmM4ZjE0YWMwYTBiOTljNmM3NDdiN2U0NSIsInVzZXJfaWQiOiIxIn0.DnNnAgudl6DGs3nAQKFRRONOJpO8OHUfHOjEf1jjVDk	2026-08-17 00:11:15.23151+07	2026-08-24 00:11:15+07	1	ae3b5376c8f14ac0a0b99c6c747b7e45
-18	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTcxMCwiaWF0IjoxNzg2OTAwOTEwLCJqdGkiOiIwMTk0OWE4ZWU0MTg0MGE3YjY5OGY0MDgyZDg0ZGZlMiIsInVzZXJfaWQiOiIxIn0.ObPuNL4mMp0Mu_vda4MhhxpgTzZaDBl_00HbxJtQd74	2026-08-17 00:21:50.82492+07	2026-08-24 00:21:50+07	1	01949a8ee41840a7b698f4082d84dfe2
-19	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTcyNiwiaWF0IjoxNzg2OTAwOTI2LCJqdGkiOiI4N2NmMzYzZDc0Y2Y0NzFlODE5NjU5NzNjZjU1ODUyMiIsInVzZXJfaWQiOiIyIn0.cFtiTCNwYsR6PZp5jVzH6hkwf7-Brsii0JE5aeumSwk	2026-08-17 00:22:06.652569+07	2026-08-24 00:22:06+07	2	87cf363d74cf471e81965973cf558522
-20	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTc0NCwiaWF0IjoxNzg2OTAwOTQ0LCJqdGkiOiJhYzAzMWI5MzQzYjQ0ZGM2Yjk0YmY3NGFlN2Q3OGEwNyIsInVzZXJfaWQiOiIzIn0.49-jRp8L4xiM_5pCsMoe_foxrPMBhkFE5gnFW93tzU0	2026-08-17 00:22:24.175344+07	2026-08-24 00:22:24+07	3	ac031b9343b44dc6b94bf74ae7d78a07
-21	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTgxNCwiaWF0IjoxNzg2OTAxMDE0LCJqdGkiOiI4Y2VlZGQyNjZjMTc0OWU5YWMzMjQwYWQyZGFlNjEwZiIsInVzZXJfaWQiOiIxIn0.UmO19a-2J5ocab4F7doPtgJziAUHX4W1HOYbaAPnMN8	2026-08-17 00:23:34.78072+07	2026-08-24 00:23:34+07	1	8ceedd266c1749e9ac3240ad2dae610f
-22	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTgyOSwiaWF0IjoxNzg2OTAxMDI5LCJqdGkiOiJlMTZlYzAzM2ViNzg0MDAxYmVlYjNiNDYwY2M4MTdlZiIsInVzZXJfaWQiOiIyIn0.UsRztvRyMF2s-PkgaphaZL7uj6JAnfR1f2sE488VGCs	2026-08-17 00:23:49.172419+07	2026-08-24 00:23:49+07	2	e16ec033eb784001beeb3b460cc817ef
-23	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTg0NiwiaWF0IjoxNzg2OTAxMDQ2LCJqdGkiOiI1NGRiZDMxOGMxNjE0MDczOTNiOTg2ODgxYmExZDc4YyIsInVzZXJfaWQiOiIzIn0.94FM74bbrXR_XeljWFwT2a__mWWOfdgOAv6hNROgNZ8	2026-08-17 00:24:06.136968+07	2026-08-24 00:24:06+07	3	54dbd318c161407393b986881ba1d78c
-24	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTg2NCwiaWF0IjoxNzg2OTAxMDY0LCJqdGkiOiJiZTY4NzQ2ZDI3ZGU0NDkwYjg0NGI5ODdiYTE2NjIxOSIsInVzZXJfaWQiOiI2In0.ieZ9ERZjsj9nXBJuafWcJJM4CJwzqGX29OtBMJJ2_tc	2026-08-17 00:24:24.366112+07	2026-08-24 00:24:24+07	6	be68746d27de4490b844b987ba166219
-25	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTkyOSwiaWF0IjoxNzg2OTAxMTI5LCJqdGkiOiJlZGVhYTcwZWE2OWU0YTMxYTk1Y2I3OTg2MDhmZWY1MiIsInVzZXJfaWQiOiIxIn0.SXxpCNrUgv-Air7luLOlfaNYiIJZg8aLW9QSMcpTL4s	2026-08-17 00:25:29.956151+07	2026-08-24 00:25:29+07	1	edeaa70ea69e4a31a95cb798608fef52
-26	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTk0MywiaWF0IjoxNzg2OTAxMTQzLCJqdGkiOiI4NmQxZjMxMGNkZTk0ODZjODJjYjg0NTcwZjg1Mjc1MCIsInVzZXJfaWQiOiIyIn0.gnO7MfnTdPm91e37gKSo9J4xLgJBWoIe45JAxeLIVZM	2026-08-17 00:25:43.926081+07	2026-08-24 00:25:43+07	2	86d1f310cde9486c82cb84570f852750
-27	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTk2MCwiaWF0IjoxNzg2OTAxMTYwLCJqdGkiOiJlYTg0ZDFmOTFhMTM0NzMwOTg2NjY1YmNjYTNjYTc5MCIsInVzZXJfaWQiOiIzIn0.8wI7GTmSepbhQf3jqjlyps8_Jv0wJHi9vPuQX2uXXrA	2026-08-17 00:26:00.510411+07	2026-08-24 00:26:00+07	3	ea84d1f91a134730986665bcca3ca790
-28	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNTk4MCwiaWF0IjoxNzg2OTAxMTgwLCJqdGkiOiI2NDY0M2EyMDk4NzA0N2UxOTc2NWQ4YzMwY2FkYTU0YSIsInVzZXJfaWQiOiI2In0.iMeiT6jmzYduw_NMETvR6FK4zX_UWFFm4TlC4grRb80	2026-08-17 00:26:20.292039+07	2026-08-24 00:26:20+07	6	64643a20987047e19765d8c30cada54a
-29	eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc4NzUwNjU1OSwiaWF0IjoxNzg2OTAxNzU5LCJqdGkiOiI1Y2YwMzc3Nzk0Yjc0MDk1ODc1MGFkYTg3MmQ2MzY5YiIsInVzZXJfaWQiOiIxIn0.Qjec9wkmCAmFEcjJCdDAifW1lOEeM7vYcS2MPUeHox8	2026-08-17 00:35:59.534134+07	2026-08-24 00:35:59+07	1	5cf0377794b740958750ada872d6369b
-\.
+INSERT INTO public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) VALUES (1, '2026-08-15 00:13:42.764181+07', '2026-08-15 00:13:42.764192+07', 'ฉีดโบลดริ้วรอย', 'ฉีด', '', 30, 8500.00, true, true);
+INSERT INTO public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) VALUES (2, '2026-08-15 00:13:42.769746+07', '2026-08-15 00:13:42.769756+07', 'ฟิลเลอร์ร่องแก้ม', 'ฉีด', '', 45, 12000.00, true, true);
+INSERT INTO public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) VALUES (3, '2026-08-15 00:13:42.770689+07', '2026-08-15 00:13:42.770696+07', 'เลเซอร์หน้าใส', 'เลเซอร์', '', 60, 3500.00, true, true);
+INSERT INTO public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) VALUES (4, '2026-08-15 00:13:42.771429+07', '2026-08-15 00:13:42.771435+07', 'ปรึกษาแพทย์', 'ปรึกษา', '', 15, 500.00, true, true);
+INSERT INTO public.services_servicetype (id, created_at, updated_at, name, category, description, duration_minutes, price, requires_doctor, is_active) VALUES (5, '2026-08-15 00:13:42.772128+07', '2026-08-15 00:13:42.772133+07', 'ดริปวิตามินผิว', 'ดริป', '', 60, 2500.00, false, true);
 
 
 --
@@ -2248,5 +2146,4 @@ ALTER TABLE ONLY public.token_blacklist_outstandingtoken
 -- PostgreSQL database dump complete
 --
 
-\unrestrict kAhvTxeBRdxwme1whsna8AsXdb7wDqJKCrMWyrh1Frwej7T9fptA56ntnrW6ClW
 
